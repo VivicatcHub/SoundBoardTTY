@@ -1,43 +1,44 @@
 # SoundBoardTTY 🎵
 
-SoundBoardTTY est une soundboard simple et facile d'utilisation pour le terminal (**TTY**). Il permet de jouer des sons directement depuis une interface en **ncurses**, avec un support actuel des formats **MP3 et WAV**.
+SoundBoardTTY is a simple and easy-to-use soundboard for the terminal (**TTY**). It allows you to play sounds directly from an **ncurses** interface, with current support for **MP3** and **WAV** formats.
 
-## 🚀 Fonctionnalités
-- Interface **ncurses** intuitive et facile à utiliser.
-- Supporte les formats **MP3** et **WAV** (modulable pour ajouter d'autres formats).
-- Fonctionne exclusivement en **ligne de commande**.
-- **Dépendance minimale** : Utilise uniquement **ncurses** (mais peut être étendu à d'autres bibliothèques audio).
+> Voici la version anglaise du README. Pour la version française cliquez ici : [README.fr.md](README.fr.md).
+
+## 🚀 Features
+- Intuitive and easy-to-use **ncurses** interface.
+- Supports **MP3** and **WAV** formats (extendable to add more formats).
+- Works exclusively via **command line**.
+- **Minimal dependencies**: Uses only **ncurses** (but can be extended to other audio libraries).
 
 ## 🛠 Installation
 
-### **Compilation avec Makefile**
+### **Compilation with Makefile**
 ```bash
 git clone https://github.com/VivicatcHub/SoundBoardTTY.git
 cd SoundBoardTTY
 make install
 ```
-Cela générera un binaire sbtty.
+This will generate a `sbtty` binary.
 
-## 🎮 Utilisation
-Lancer SoundBoardTTY en mode interface graphique TTY :
+## 🎮 Usage
+Run SoundBoardTTY in TTY graphical interface mode:
 ```
 sbtty
 ```
 
-### Options disponibles
-| Option                     | Description                      |
-|----------------------------|----------------------------------|
-| `-h`, `--help`	         | Affiche l’aide                   |
-| `-a`, `--add <fichier>`    | Ajoute un son à la soundboard    |
-| `-u`, `--update <fichier>` | Met à jour un son existant       |
-| `-d`, `--delete <fichier>` | Supprime un son                  |
-| `-p`, `--play <fichier>`	 | Joue un son en ligne de commande |
+### Available options
+| Option                     | Description                         |
+|----------------------------|-------------------------------------|
+| `-h`, `--help`	         | Displays help                       |
+| `-a`, `--add <fichier>`    | Adds a sound to the soundboard      |
+| `-u`, `--update <fichier>` | Updates an existing sound           |
+| `-d`, `--delete <fichier>` | Deletes a sound                     |
+| `-p`, `--play <fichier>`	 | Plays a sound from the command line |
 
 
-## 🖥 Système supporté
-✅ Linux uniquement (pour l’instant).
+## 🖥 Supported systems
+✅ Linux only (for now).
 
-## 📌 Objectifs futurs
-Ajouter le support pour plus de formats audio.
-Rendre la gestion des dépendances audio modulable (ex: SDL2_mixer, SoX, ffmpeg...).
-Fournir une installation via un binaire précompilé.
+## 📌 Future goals
+- Add support for more audio formats.
+- Make audio dependency management modular (e.g., SDL2_mixer, SoX, ffmpeg...).
