@@ -4,13 +4,14 @@ void read_sounds(void)
 {
     FILE *file = fopen(sounds_file_path, "r");
     if (!file) {
+        printf("%s\n", sounds_file_path);
         file = fopen(sounds_file_path, "w");
         if (!file) {
-            perror("Failed to create sounds.txt");
+            perror("Failed to create .txt");
             exit(EXIT_FAILURE);
         }
         fclose(file);
-        printw("Le fichier sounds.txt a été créé.\n");
+        printw("Le fichier .txt a été créé.\n");
         return;
     }
 
@@ -36,7 +37,7 @@ void write_sounds(void)
 {
     FILE *file = fopen(sounds_file_path, "w");
     if (!file) {
-        perror("Failed to open sounds.txt for writing");
+        perror("Failed to open .txt for writing");
         exit(EXIT_FAILURE);
     }
 

@@ -7,6 +7,7 @@
 
 #include "help_fc.h"
 #include <ao/ao.h>
+#include <limits.h>
 #include <mpg123.h>
 #include <ncurses.h>
 #include <pthread.h>
@@ -20,8 +21,8 @@
 ////////////////////////////////////////////////////////////
 
 typedef struct {
-  char name[100];
-  char path[256];
+    char name[100];
+    char path[256];
 } Sound;
 
 ////////////////////////////////////////////////////////////
@@ -34,7 +35,7 @@ typedef struct {
 
 extern Sound sounds[MAX_SOUNDS];
 extern int sound_count;
-extern const char *sounds_file_path;
+extern char sounds_file_path[1024];
 extern pthread_t play_thread;
 extern int stop_playback;
 
@@ -44,7 +45,7 @@ extern int stop_playback;
 
 void draw_menu(int highlight);
 void draw_submenu(const char *title, Sound *sounds, int num_sounds,
-                  int highlight);
+    int highlight);
 void handle_add_sound();
 void handle_update_sound();
 void handle_delete_sound();
@@ -86,5 +87,11 @@ void handle_play_sound(void);
 ////////////////////////////////////////////////////////////
 
 void handle_update_sound(void);
+
+////////////////////////////////////////////////////////////
+/// volume
+////////////////////////////////////////////////////////////
+
+void handle_volume(void);
 
 #endif /* !HEADER */

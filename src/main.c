@@ -2,21 +2,22 @@
 
 Sound sounds[MAX_SOUNDS];
 int sound_count = 0;
-const char *sounds_file_path = "data_sound/sounds.txt";
+char sounds_file_path[1024];
 
 pthread_t play_thread;
 int stop_playback = 0;
 
 void draw_menu(int highlight)
 {
-    const char *choices[MAX_LINES] = {"[P] Jouer un son", "Ajouter un son",
-        "Mettre à jour un son", "Supprimer un son", "Volume", "Aide", "Quitter"};
+    const char *choices[MAX_LINES] = {"Jouer un son", "Ajouter un son",
+        "Mettre à jour un son", "Supprimer un son", "Volume", "Aide",
+        "Quitter"};
     for (int i = 0; i < MAX_LINES; i++) {
         if (i == highlight)
             attron(A_REVERSE);
-        if (i == 1) // Ajouter un son
+        if (i == 1)// Ajouter un son
             attron(COLOR_PAIR(2));
-        else if (i == 3) // Supprimer un son
+        else if (i == 3)// Supprimer un son
             attron(COLOR_PAIR(3));
         else
             attron(COLOR_PAIR(4));
@@ -73,20 +74,18 @@ void draw_submenu(const char *title, Sound *sounds, int num_sounds,
 static int launch_ncurses(void)
 {
     initscr();
-    start_color(); // Initialiser les couleurs
+    start_color();// Initialiser les couleurs
     noecho();
     curs_set(0);
     keypad(stdscr, TRUE);
 
     // Définir les paires de couleurs
     init_pair(1, COLOR_WHITE, COLOR_BLUE); // Fond d'écran bleu
-    init_pair(2, COLOR_GREEN, COLOR_BLACK); // Ajouter un son en vert
-    init_pair(3, COLOR_RED, COLOR_BLACK); // Supprimer un son en rouge
-    init_pair(4, COLOR_WHITE, COLOR_BLACK); // Autres éléments en blanc
+    init_pair(2, COLOR_GREEN, COLOR_BLACK);// Ajouter un son en vert
+    init_pair(3, COLOR_RED, COLOR_BLACK);  // Supprimer un son en rouge
+    init_pair(4, COLOR_WHITE, COLOR_BLACK);// Autres éléments en blanc
 
-    bkgd(COLOR_PAIR(1)); // Appliquer la couleur de fond
-
-    read_sounds();
+    // bkgd(COLOR_PAIR(1));// Appliquer la couleur de fond
 
     int highlight = 0;
     int ch;
@@ -102,7 +101,7 @@ static int launch_ncurses(void)
                 if (highlight < MAX_LINES - 1)
                     highlight++;
                 break;
-            case 10: // Enter key
+            case 10:// Enter key
                 switch (highlight) {
                     case 0:
                         handle_play_sound();
@@ -138,6 +137,9 @@ static int launch_ncurses(void)
 
 int main(int ac, char **av)
 {
+    snprintf(sounds_file_path, sizeof(sounds_file_path), "%s/%s",
+        getenv("HOME"), "SoundBoardTTY_sounds.txt");
+    read_sounds();
     if (ac == 1)
         return launch_ncurses();
     else

@@ -6,17 +6,14 @@ int get_volume()
     char path[1035];
     int volume = 0;
 
-    // Exécuter la commande pour obtenir le volume actuel
-    fp = popen("amixer get Master | grep -o '[0-9]*%' | head -n1 | tr -d '%'", "r");
+    fp = popen("amixer get Master | grep -o '[0-9]*%' | head -n1 | tr -d '%'",
+        "r");
     if (fp == NULL) {
         printf("Failed to run command\n");
         exit(1);
     }
-
-    // Lire la sortie de la commande
     if (fgets(path, sizeof(path) - 1, fp) != NULL)
         volume = atoi(path);
-    // Fermer le flux
     pclose(fp);
     return volume;
 }
@@ -40,7 +37,7 @@ void draw_volume_menu(int highlight)
     refresh();
 }
 
-void handle_volume()
+void handle_volume(void)
 {
     int highlight = 1;
     int ch;
@@ -56,24 +53,18 @@ void handle_volume()
                 if (highlight < 2)
                     highlight++;
                 break;
-            case 10: // Enter key
-                if (highlight == 0) {
-                    // Diminuer le volume
+            case 10:
+                if (highlight == 0)
                     system("amixer set Master 2%-");
-                } else if (highlight == 2) {
-                    // Augmenter le volume
+                else if (highlight == 2)
                     system("amixer set Master 2%+");
-                } else if (highlight == 1) {
-                    // Retour au menu principal
+                else if (highlight == 1)
                     return;
-                }
                 break;
             case KEY_LEFT:
-                // Diminuer le volume
                 system("amixer set Master 2%-");
                 break;
             case KEY_RIGHT:
-                // Augmenter le volume
                 system("amixer set Master 2%+");
                 break;
         }

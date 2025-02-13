@@ -58,7 +58,7 @@ re:	fclean all
 dependencies:
 	sudo apt-get install libao-dev libmpg123-dev
 
-install:	dependencies $(BIN_NAME)
+install:	dependencies all
 	sudo install -m 755 $(BIN_NAME) $(BIN_DIR)
 
 uninstall:
