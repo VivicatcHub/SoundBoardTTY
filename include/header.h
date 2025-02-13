@@ -20,15 +20,15 @@
 ////////////////////////////////////////////////////////////
 
 typedef struct {
-    char name[100];
-    char path[256];
+  char name[100];
+  char path[256];
 } Sound;
 
 ////////////////////////////////////////////////////////////
 /// VALUES
 ////////////////////////////////////////////////////////////
 
-#define MAX_LINES 6
+#define MAX_LINES 7
 #define MAX_SOUNDS 100
 #define BITS 8
 
@@ -44,7 +44,7 @@ extern int stop_playback;
 
 void draw_menu(int highlight);
 void draw_submenu(const char *title, Sound *sounds, int num_sounds,
-    int highlight);
+                  int highlight);
 void handle_add_sound();
 void handle_update_sound();
 void handle_delete_sound();
