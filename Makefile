@@ -28,7 +28,10 @@ endif
 
 TESTS_PATH	=	tests/
 
-all:	$(BIN_NAME)
+dependencies:
+	sudo apt-get install libao-dev libmpg123-dev
+
+all:	dependencies $(BIN_NAME)
 
 make_lib:
 	make -C $(LIB_HF_PATH)
