@@ -11,7 +11,7 @@ OBJS	=	$(SRCS:%.c=%.o)
 
 NAME	=	libhf.a
 
-CFLAGS	=	-I../../include/
+CFLAGS	=	-I../include/
 CFLAGS	+=	-Wall
 CFLAGS	+=	-Wextra
 CFLAGS	+=	-Wpedantic

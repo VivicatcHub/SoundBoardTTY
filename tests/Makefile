@@ -10,7 +10,7 @@ CC	=	gcc
 NAME	=	unit_tests
 
 SRCS	=	$(wildcard *.c)	\
-			$(wildcard ../lib/hf/*.c)	\
+			$(wildcard ../lib/*.c)	\
 			$(wildcard ../src/*.c)
 SRCS	:=	$(filter-out ../src/main.c, $(SRCS))
 

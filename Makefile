@@ -1,6 +1,8 @@
 CC	=	gcc
 
-NAME	=	sbtty
+PREFIX	=	/usr
+BIN_DIR	=	$(PREFIX)/bin
+BIN_NAME	=	sbtty
 
 SRCS	=	$(wildcard src/*.c)
 
@@ -25,13 +27,13 @@ endif
 
 TESTS_PATH	=	tests/
 
-all:	$(NAME)
+all:	$(BIN_NAME)
 
 make_lib:
 	make -C $(LIB_HF_PATH)
 
-$(NAME):	make_lib $(OBJS)
-	$(CC) $(OBJS) -o $(NAME) $(CFLAGS)
+$(BIN_NAME):	make_lib $(OBJS)
+	$(CC) $(OBJS) -o $(BIN_NAME) $(CFLAGS)
 
 make_clean_lib:
 	make clean -C $(LIB_HF_PATH)
@@ -46,10 +48,17 @@ make_fclean_tests:
 	make fclean -C $(TESTS_PATH)
 
 fclean:	clean make_fclean_lib make_fclean_tests
-	rm -f $(NAME)
+	rm -f $(BIN_NAME)
 	rm -f *.txt
 
 re:	fclean all
+
+## -- INSTALL -- ##
+install: $(BIN_NAME)
+	sudo install -m 755 $(BIN_NAME) $(BIN_DIR)
+
+uninstall:
+	sudo rm -f $(BIN_DIR)/$(BIN_NAME)
 
 ## -- CRITERION TESTS -- ##
 unit_tests:
