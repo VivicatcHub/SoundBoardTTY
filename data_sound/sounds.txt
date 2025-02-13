@@ -1,1 +1,6 @@
-ph,sounds/intro-ph.mp3
+among_us,data_sound/among_us.mp3
+car_horn,data_sound/car_horn.mp3
+john_cenna,data_sound/john_cenna.mp3
+rick_roll,data_sound/rick_roll.mp3
+rizz,data_sound/rizz.mp3
+wouuaa,data_sound/wouuaa.mp3
