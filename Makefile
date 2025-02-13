@@ -18,6 +18,7 @@ CFLAGS	+=	-Wunused
 CFLAGS	+=	-Wunused-parameter
 CFLAGS	+=	-L$(LIB_HF_PATH) -lhf
 CFLAGS	+=	-lncurses
+CFLAGS	+=	-lao -lmpg123
 
 ifeq ($(ENV), dev)
 	CFLAGS	+=	-g3
