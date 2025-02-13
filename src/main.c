@@ -4,6 +4,9 @@ Sound sounds[MAX_SOUNDS];
 int sound_count = 0;
 const char *sounds_file_path = "data_sound/sounds.txt";
 
+pthread_t play_thread;
+int stop_playback = 0;
+
 void read_sounds() {
   FILE *file = fopen(sounds_file_path, "r");
   if (!file) {
@@ -47,7 +50,8 @@ void write_sounds() {
   fclose(file);
 }
 
-void play_sound(const char *path) {
+void *play_sound_thread(void *arg) {
+  const char *path = (const char *)arg;
   mpg123_handle *mh;
   unsigned char *buffer;
   size_t buffer_size;
@@ -78,8 +82,12 @@ void play_sound(const char *path) {
   format.matrix = 0;
   dev = ao_open_live(driver, &format, NULL);
 
-  while (mpg123_read(mh, buffer, buffer_size, &done) == MPG123_OK)
+  while (mpg123_read(mh, buffer, buffer_size, &done) == MPG123_OK) {
+    if (stop_playback) {
+      break;
+    }
     ao_play(dev, (char *)buffer, done);
+  }
 
   free(buffer);
   ao_close(dev);
@@ -87,6 +95,15 @@ void play_sound(const char *path) {
   mpg123_delete(mh);
   mpg123_exit();
   ao_shutdown();
+
+  return NULL;
+}
+
+void play_sound(const char *path) {
+  stop_playback = 1;
+  pthread_join(play_thread, NULL);
+  stop_playback = 0;
+  pthread_create(&play_thread, NULL, play_sound_thread, (void *)path);
 }
 
 void draw_menu(int highlight) {
@@ -285,8 +302,6 @@ void handle_play_sound() {
                sounds[highlight].name);
       refresh();
       play_sound(sounds[highlight].path);
-      getch();
-      return;
     }
   }
 }

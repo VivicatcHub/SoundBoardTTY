@@ -9,6 +9,7 @@
 #include <ao/ao.h>
 #include <mpg123.h>
 #include <ncurses.h>
+#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
