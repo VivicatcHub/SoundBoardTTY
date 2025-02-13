@@ -1,6 +1,14 @@
 # SoundBoardTTY
 Play sound easily in tty
 
+## Flags
+
+- [ ] -h --help
+- [ ] -a --add
+- [ ] -u --update
+- [ ] -d --delete
+- [ ] -p --play
+
 ## Crédits
 
 Un grand merci à tous les contributeurs qui rendent ce projet possible :
