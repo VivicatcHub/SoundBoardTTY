@@ -28,10 +28,7 @@ endif
 
 TESTS_PATH	=	tests/
 
-dependencies:
-	sudo apt-get install libao-dev libmpg123-dev
-
-all:	dependencies $(BIN_NAME)
+all:	$(BIN_NAME)
 
 make_lib:
 	make -C $(LIB_HF_PATH)
@@ -58,7 +55,10 @@ fclean:	clean make_fclean_lib make_fclean_tests
 re:	fclean all
 
 ## -- INSTALL -- ##
-install: $(BIN_NAME)
+dependencies:
+	sudo apt-get install libao-dev libmpg123-dev
+
+install:	dependencies $(BIN_NAME)
 	sudo install -m 755 $(BIN_NAME) $(BIN_DIR)
 
 uninstall:
@@ -85,4 +85,5 @@ github:
 .PHONY: all clean fclean re	\
 		make_lib make_clean_lib make_fclean_lib make_fclean_tests	\
 		unit_tests tests_run lines branches	\
+		install uninstall dependencies \
 		github
