@@ -22,11 +22,11 @@ void draw_volume_menu(int highlight)
 {
     int volume = get_volume();
     char volume_text[20];
-    snprintf(volume_text, sizeof(volume_text), "Volume: %d%%", volume);
+    snprintf(volume_text, sizeof(volume_text), "Volume: %d%s", volume, "%%");
 
     const char *choices[3] = {"[-]", volume_text, "[+]"};
     clear();
-    mvprintw(0, 0, "Réglage du volume");
+    mvprintw(0, 5, "Réglage du volume");
     for (int i = 0; i < 3; i++) {
         if (i == highlight)
             attron(A_REVERSE);
@@ -35,6 +35,13 @@ void draw_volume_menu(int highlight)
             attroff(A_REVERSE);
     }
     refresh();
+}
+
+void set_volume(const char *cmd)
+{
+    FILE *fp = popen(cmd, "r");
+    if (fp != NULL)
+        pclose(fp);
 }
 
 void handle_volume(void)
@@ -55,17 +62,17 @@ void handle_volume(void)
                 break;
             case 10:
                 if (highlight == 0)
-                    system("amixer set Master 2%-");
+                    set_volume("amixer set Master 2%-");
                 else if (highlight == 2)
-                    system("amixer set Master 2%+");
+                    set_volume("amixer set Master 2%+");
                 else if (highlight == 1)
                     return;
                 break;
             case KEY_LEFT:
-                system("amixer set Master 2%-");
+                set_volume("amixer set Master 2%-");
                 break;
             case KEY_RIGHT:
-                system("amixer set Master 2%+");
+                set_volume("amixer set Master 2%+");
                 break;
         }
         clear();

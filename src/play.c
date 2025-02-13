@@ -63,8 +63,7 @@ void handle_play_sound(void)
     int ch;
     while (1) {
         if (sound_count == 0) {
-            mvprintw(0, 0, "Aucun son dans la liste\n");
-            mvprintw(1, 0, "Retour");
+            mvprintw(0, 5, "Aucun son dans la liste\n");
             refresh();
             getch();
             return;

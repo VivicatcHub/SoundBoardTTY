@@ -37,13 +37,13 @@ void draw_menu(int highlight)
 static void print_help(void)
 {
     clear();
-    mvprintw(0, 0, "Usage: soundboard [options]\n");
-    mvprintw(1, 0, "Options:\n");
-    mvprintw(2, 0, "  -h, --help          Show this help message\n");
-    mvprintw(3, 0, "  -a, --add           Add a sound/music\n");
-    mvprintw(4, 0, "  -u, --update        Update a sound/music\n");
-    mvprintw(5, 0, "  -d, --delete        Delete a sound/music\n");
-    mvprintw(6, 0, "  -p, --play [name]   Play a sound by name\n");
+    mvprintw(2 + 0, 5, "Usage: soundboard [options]\n");
+    mvprintw(2 + 1, 5, "Options:\n");
+    mvprintw(2 + 2, 5, "  -h, --help          Show this help message\n");
+    mvprintw(2 + 3, 5, "  -a, --add           Add a sound/music\n");
+    mvprintw(2 + 4, 5, "  -u, --update        Update a sound/music\n");
+    mvprintw(2 + 5, 5, "  -d, --delete        Delete a sound/music\n");
+    mvprintw(2 + 6, 5, "  -p, --play [name]   Play a sound by name\n");
     refresh();
     getch();
 }
