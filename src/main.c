@@ -21,7 +21,7 @@ void draw_menu(int highlight)
     refresh();
 }
 
-void print_help()
+static void print_help(void)
 {
     clear();
     mvprintw(0, 0, "Usage: soundboard [options]\n");
@@ -56,7 +56,7 @@ void draw_submenu(const char *title, Sound *sounds, int num_sounds,
     refresh();
 }
 
-int main()
+static int launch_ncurses(void)
 {
     initscr();
     noecho();
@@ -108,4 +108,12 @@ int main()
 
     endwin();
     return 0;
+}
+
+int main(int ac, char **av)
+{
+    if (ac == 1)
+        return launch_ncurses();
+    else
+        flag_gestion(av);
 }
