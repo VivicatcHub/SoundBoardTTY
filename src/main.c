@@ -107,9 +107,9 @@ void play_sound(const char *path) {
 }
 
 void draw_menu(int highlight) {
-  const char *choices[MAX_LINES] = {"Jouer un son", "Ajouter un son",
-                                    "Mettre à jour un son", "Supprimer un son",
-                                    "Aide"};
+  const char *choices[MAX_LINES] = {
+      "Jouer un son",     "Ajouter un son", "Mettre à jour un son",
+      "Supprimer un son", "Aide",           "Quitter"};
   for (int i = 0; i < MAX_LINES; i++) {
     if (i == highlight)
       attron(A_REVERSE);
@@ -345,6 +345,9 @@ int main() {
       case 4:
         print_help();
         break;
+      case 5:
+        endwin();
+        return 0;
       }
       break;
     }

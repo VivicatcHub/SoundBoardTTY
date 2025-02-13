@@ -19,7 +19,7 @@
 /// VALUES
 ////////////////////////////////////////////////////////////
 
-#define MAX_LINES 5
+#define MAX_LINES 6
 #define MAX_SOUNDS 100
 #define BITS 8
 
