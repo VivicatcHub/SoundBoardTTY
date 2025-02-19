@@ -4,16 +4,12 @@ static void print_help(void)
 {
     printf("Usage: sbtty [options]\n");
     printf("Options:\n");
+    printf("\t-h, --help\t\t\t\t\tShow this help message\n");
+    printf("\t-a, --add [name] [path]\t\t\t\tAdd a sound/music\n");
     printf(
-        "\t-h, --help                                   Show this help message\n");
-    printf(
-        "\t-a, --add [name] [path]                      Add a sound/music\n");
-    printf(
-        "\t-u, --update [name] [new_name] [new_path]    Update a sound/music\n");
-    printf(
-        "\t-d, --delete [name]                          Delete a sound/music\n");
-    printf(
-        "\t-p, --play [name]                            Play a sound by name\n");
+        "\t-u, --update [name] [new_name] [new_path]\tUpdate a sound/music\n");
+    printf("\t-d, --delete [name]\t\t\t\tDelete a sound/music\n");
+    printf("\t-p, --play [name]\t\t\t\tPlay a sound by name\n");
     exit(ERROR);
 }
 
@@ -41,9 +37,9 @@ static void flag_u(int ac, char **av)
 static void flag_d(int ac, char **av)
 {
     int id = -1;
+
     if (ac != 3)
         print_help();
-
     for (int i = 0; i < sound_count; i++)
         if (my_strcmp(sounds[i].name, av[2]) == 0)
             id = i;
@@ -54,9 +50,9 @@ static void flag_d(int ac, char **av)
 static void flag_p(int ac, char **av)
 {
     int id = -1;
+
     if (ac != 3)
         print_help();
-
     for (int i = 0; i < sound_count; i++)
         if (my_strcmp(sounds[i].name, av[2]) == 0)
             id = i;
