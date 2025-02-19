@@ -1,6 +1,6 @@
 #include "header.h"
 
-static create_sounds(FILE *file)
+static void create_sounds(FILE *file, Global_t *global)
 {
     char line[512];
     char *name;
@@ -10,22 +10,22 @@ static create_sounds(FILE *file)
         name = strtok(line, ",");
         path = strtok(NULL, "\n");
         if (name && path) {
-            strncpy(sounds[sound_count].name, name,
-                sizeof(sounds[sound_count].name));
-            strncpy(sounds[sound_count].path, path,
-                sizeof(sounds[sound_count].path));
-            sound_count++;
+            strncpy(global->sounds[global->sound_count].name, name,
+                sizeof(global->sounds[global->sound_count].name));
+            strncpy(global->sounds[global->sound_count].path, path,
+                sizeof(global->sounds[global->sound_count].path));
+            global->sound_count++;
         }
     }
 }
 
-void read_sounds(void)
+void read_sounds(Global_t *global)
 {
-    FILE *file = fopen(sounds_file_path, "r");
+    FILE *file = fopen(global->sounds_file_path, "r");
 
     if (!file) {
-        printf("%s\n", sounds_file_path);
-        file = fopen(sounds_file_path, "w");
+        printf("%s\n", global->sounds_file_path);
+        file = fopen(global->sounds_file_path, "w");
         if (!file) {
             perror("Failed to create .txt");
             exit(EXIT_FAILURE);
@@ -34,21 +34,21 @@ void read_sounds(void)
         printw("Le fichier .txt a été créé.\n");
         return;
     }
-    create_sounds(file);
+    create_sounds(file, global);
     fclose(file);
-    if (sound_count == 0)
+    if (global->sound_count == 0)
         printw("Il n'y a pas de sons dans la liste.\n");
 }
 
-void write_sounds(void)
+void write_sounds(Global_t *global)
 {
-    FILE *file = fopen(sounds_file_path, "w");
+    FILE *file = fopen(global->sounds_file_path, "w");
 
     if (!file) {
         perror("Failed to open .txt for writing");
         exit(EXIT_FAILURE);
     }
-    for (int i = 0; i < sound_count; i++)
-        fprintf(file, "%s,%s\n", sounds[i].name, sounds[i].path);
+    for (int i = 0; i < global->sound_count; i++)
+        fprintf(file, "%s,%s\n", global->sounds[i].name, global->sounds[i].path);
     fclose(file);
 }

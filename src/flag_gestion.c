@@ -13,64 +13,64 @@ static void print_help(void)
     exit(ERROR);
 }
 
-static void flag_a(int ac, char **av)
+static void flag_a(int ac, char **av, Global_t *global)
 {
     if (ac != 4)
         print_help();
-    command_add(av[2], av[3]);
+    command_add(av[2], av[3], global);
     printf("Sound '%s' added with path '%s'\n", av[2], av[3]);
 }
 
-static void flag_u(int ac, char **av)
+static void flag_u(int ac, char **av, Global_t *global)
 {
     int id = -1;
 
     if (ac != 5)
         print_help();
-    for (int i = 0; i < sound_count; i++)
-        if (my_strcmp(sounds[i].name, av[2]) == 0)
+    for (int i = 0; i < global->sound_count; i++)
+        if (my_strcmp(global->sounds[i].name, av[2]) == 0)
             id = i;
-    command_upd(id, av[3], av[4]);
+    command_upd(id, av[3], av[4], global);
     printf("Sound '%s' updated with path '%s'\n", av[3], av[4]);
 }
 
-static void flag_d(int ac, char **av)
+static void flag_d(int ac, char **av, Global_t *global)
 {
     int id = -1;
 
     if (ac != 3)
         print_help();
-    for (int i = 0; i < sound_count; i++)
-        if (my_strcmp(sounds[i].name, av[2]) == 0)
+    for (int i = 0; i < global->sound_count; i++)
+        if (my_strcmp(global->sounds[i].name, av[2]) == 0)
             id = i;
-    command_del(id);
+    command_del(id, global);
     printf("Sound deleted\n");
 }
 
-static void flag_p(int ac, char **av)
+static void flag_p(int ac, char **av, Global_t *global)
 {
     int id = -1;
 
     if (ac != 3)
         print_help();
-    for (int i = 0; i < sound_count; i++)
-        if (my_strcmp(sounds[i].name, av[2]) == 0)
+    for (int i = 0; i < global->sound_count; i++)
+        if (my_strcmp(global->sounds[i].name, av[2]) == 0)
             id = i;
-    play_sound(sounds[id].path);
-    while (!is_finished)
+    play_sound(global->sounds[id].path, global);
+    while (!global->is_finished)
         sleep(0.1);
 }
 
-void flag_gestion(int ac, char **av)
+void flag_gestion(int ac, char **av, Global_t *global)
 {
     if (my_strcmp(av[1], "-h") == 0)
         print_help();
     if (my_strcmp(av[1], "-a") == 0)
-        flag_a(ac, av);
+        flag_a(ac, av, global);
     if (my_strcmp(av[1], "-u") == 0)
-        flag_u(ac, av);
+        flag_u(ac, av, global);
     if (my_strcmp(av[1], "-d") == 0)
-        flag_d(ac, av);
+        flag_d(ac, av, global);
     if (my_strcmp(av[1], "-p") == 0)
-        flag_p(ac, av);
+        flag_p(ac, av, global);
 }

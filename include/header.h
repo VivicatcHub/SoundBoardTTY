@@ -1,20 +1,20 @@
 #ifndef HEADER
-    #define HEADER
+#define HEADER
 
 ////////////////////////////////////////////////////////////
 /// INCLUDE
 ////////////////////////////////////////////////////////////
 
-    #include "help_fc.h"
-    #include <ao/ao.h>
-    #include <limits.h>
-    #include <mpg123.h>
-    #include <ncurses.h>
-    #include <pthread.h>
-    #include <stdio.h>
-    #include <stdlib.h>
-    #include <string.h>
-    #include <unistd.h>
+#include "help_fc.h"
+#include <ao/ao.h>
+#include <limits.h>
+#include <mpg123.h>
+#include <ncurses.h>
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 
 ////////////////////////////////////////////////////////////
 /// STRUCTS
@@ -29,82 +29,84 @@ typedef struct {
 /// ORDER
 ////////////////////////////////////////////////////////////
 
-    #define PLAY_SOUND 0
-    #define ADD_SOUND 2
-    #define UPD_SOUND 3
-    #define DEL_SOUND 4
-    #define VOLUME 6
-    #define HELP 7
-    #define QUIT 8
+#define PLAY_SOUND 0
+#define ADD_SOUND 2
+#define UPD_SOUND 3
+#define DEL_SOUND 4
+#define VOLUME 6
+#define HELP 7
+#define QUIT 8
 
 ////////////////////////////////////////////////////////////
 /// VALUES
 ////////////////////////////////////////////////////////////
 
-    #define MAX_LINES 9
-    #define MAX_SOUNDS 100
-    #define BITS 8
+#define MAX_LINES 9
+#define MAX_SOUNDS 100
+#define BITS 8
 
-    #define MARGIN_TOP 2
-    #define MARGIN_LEFT 5
+#define MARGIN_TOP 2
+#define MARGIN_LEFT 5
 
-extern Sound_t sounds[MAX_SOUNDS];
-extern int sound_count;
-extern pthread_t play_thread;
-extern char sounds_file_path[1024];
-extern int stop_playback;
-extern pthread_mutex_t lock;
-extern int is_finished;
+////////////////////////////////////////////////////////////
+/// GLOBAL
+////////////////////////////////////////////////////////////
+
+typedef struct Global {
+    Sound_t sounds[MAX_SOUNDS];
+    int sound_count;
+    pthread_t play_thread;
+    char sounds_file_path[1024];
+    int stop_playback;
+    pthread_mutex_t lock;
+    int is_finished;
+    const char *path;
+} Global_t;
 
 ////////////////////////////////////////////////////////////
 /// main
 ////////////////////////////////////////////////////////////
 
 void draw_menu(int highlight);
-void draw_submenu(const char *title, Sound_t *sounds, int num_sounds,
-    int highlight);
-void handle_add_sound(void);
-void handle_update_sound(void);
-void handle_delete_sound(void);
-void handle_play_sound(void);
+void draw_submenu(const char *title, Global_t *global, int highlight);
 
 ////////////////////////////////////////////////////////////
 /// add
 ////////////////////////////////////////////////////////////
 
-void handle_add_sound(void);
+void handle_add_sound(Global_t *global);
 
 ////////////////////////////////////////////////////////////
 /// bd_gestion
 ////////////////////////////////////////////////////////////
 
-void read_sounds(void);
-void write_sounds(void);
+void read_sounds(Global_t *global);
+void write_sounds(Global_t *global);
 
 ////////////////////////////////////////////////////////////
 /// delete
 ////////////////////////////////////////////////////////////
 
-void handle_delete_sound(void);
+void handle_delete_sound(Global_t *global);
 
 ////////////////////////////////////////////////////////////
 /// flag_gestion
 ////////////////////////////////////////////////////////////
 
-void flag_gestion(int ac, char **av);
+void flag_gestion(int ac, char **av, Global_t *global);
 
 ////////////////////////////////////////////////////////////
 /// play
 ////////////////////////////////////////////////////////////
 
-void handle_play_sound(void);
-void play_sound(const char *path);
+void handle_play_sound(Global_t *global);
+void play_sound(const char *path, Global_t *global);
 
 ////////////////////////////////////////////////////////////
 /// update
 ////////////////////////////////////////////////////////////
 
-void handle_update_sound(void);
+void handle_update_sound(Global_t *global);
 
 ////////////////////////////////////////////////////////////
 /// volume
@@ -116,8 +118,8 @@ void handle_volume(void);
 /// commands
 ////////////////////////////////////////////////////////////
 
-void command_add(char *name, char *path);
-void command_upd(int id, char *new_name, char *new_path);
-void command_del(int id);
+void command_add(char *name, char *path, Global_t *global);
+void command_upd(int id, char *new_name, char *new_path, Global_t *global);
+void command_del(int id, Global_t *global);
 
 #endif /* !HEADER */

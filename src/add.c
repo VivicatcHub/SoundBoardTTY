@@ -23,7 +23,7 @@ static void input_ncurses(char *buffer, int begin)
     }
 }
 
-void handle_add_sound(void)
+void handle_add_sound(Global_t *global)
 {
     char name[256] = "";
     char path[256] = "";
@@ -37,7 +37,7 @@ void handle_add_sound(void)
     move(MARGIN_TOP + 4, 0);
     refresh();
     input_ncurses(path, 4);
-    command_add(name, path);
+    command_add(name, path, global);
     mvprintw(MARGIN_TOP + 6, MARGIN_LEFT, "Sound '%s' added with path '%s'\n",
         name, path);
     refresh();

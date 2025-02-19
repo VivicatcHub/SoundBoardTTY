@@ -1,13 +1,12 @@
 #include "header.h"
 
-Sound_t sounds[MAX_SOUNDS];
-int sound_count = 0;
-char sounds_file_path[1024];
+// int sound_count = 0;
+// char sounds_file_path[1024];
 
-pthread_t play_thread;
-int stop_playback = 0;  // Indique si on doit arrêter la lecture en cours
-pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
-int is_finished = FALSE;
+// pthread_t play_thread;
+// int stop_playback = 0;  // Indique si on doit arrêter la lecture en cours
+// pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
+// int is_finished = FALSE;
 
 void draw_menu(int highlight)
 {
@@ -55,30 +54,29 @@ static void print_help(void)
     getch();
 }
 
-void draw_submenu(const char *title, Sound_t *sounds, int num_sounds,
-    int highlight)
+void draw_submenu(const char *title, Global_t *global, int highlight)
 {
     clear();
     mvprintw(0, MARGIN_LEFT, title);
-    for (int i = 0; i < num_sounds; i++) {
+    for (int i = 0; i < global->sound_count; i++) {
         if (i == highlight)
             attron(A_REVERSE);
         attron(COLOR_PAIR(4));
-        mvprintw(MARGIN_TOP + i, MARGIN_LEFT, sounds[i].name);
+        mvprintw(MARGIN_TOP + i, MARGIN_LEFT, (global->sounds[i]).name);
         if (i == highlight)
             attroff(A_REVERSE);
         attroff(COLOR_PAIR(4));
     }
-    mvprintw(MARGIN_TOP + num_sounds, MARGIN_LEFT, "Retour");
-    if (highlight == num_sounds)
+    mvprintw(MARGIN_TOP + global->sound_count, MARGIN_LEFT, "Retour");
+    if (highlight == global->sound_count)
         attron(A_REVERSE);
-    mvprintw(MARGIN_TOP + num_sounds, MARGIN_LEFT, "Retour");
-    if (highlight == num_sounds)
+    mvprintw(MARGIN_TOP + global->sound_count, MARGIN_LEFT, "Retour");
+    if (highlight == global->sound_count)
         attroff(A_REVERSE);
     refresh();
 }
 
-static int launch_ncurses(void)
+static int launch_ncurses(Global_t *global)
 {
     initscr();
     start_color();// Initialiser les couleurs
@@ -119,16 +117,16 @@ static int launch_ncurses(void)
             case 10:// Enter key
                 switch (highlight) {
                     case PLAY_SOUND:
-                        handle_play_sound();
+                        handle_play_sound(global);
                         break;
                     case ADD_SOUND:
-                        handle_add_sound();
+                        handle_add_sound(global);
                         break;
                     case UPD_SOUND:
-                        handle_update_sound();
+                        handle_update_sound(global);
                         break;
                     case DEL_SOUND:
-                        handle_delete_sound();
+                        handle_delete_sound(global);
                         break;
                     case VOLUME:
                         handle_volume();
@@ -152,11 +150,17 @@ static int launch_ncurses(void)
 
 int main(int ac, char **av)
 {
-    snprintf(sounds_file_path, sizeof(sounds_file_path), "%s/%s",
+    Global_t global;
+
+    global.sound_count = 0;
+    global.stop_playback = 0;
+    global.lock = (pthread_mutex_t) PTHREAD_MUTEX_INITIALIZER;
+    global.is_finished = FALSE;
+    snprintf(global.sounds_file_path, sizeof(global.sounds_file_path), "%s/%s",
         getenv("HOME"), "SoundBoardTTY_sounds.txt");
-    read_sounds();
+    read_sounds(&global);
     if (ac == 1)
-        return launch_ncurses();
+        return launch_ncurses(&global);
     else
-        flag_gestion(ac, av);
+        flag_gestion(ac, av, &global);
 }

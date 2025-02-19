@@ -1,28 +1,27 @@
 #include "header.h"
 
-void handle_update_sound(void)
+void handle_update_sound(Global_t *global)
 {
     int highlight = 0;
     int ch;
     while (1) {
-        draw_submenu("Select a sound to update", sounds, sound_count,
-            highlight);
+        draw_submenu("Select a sound to update", global, highlight);
         ch = getch();
         switch (ch) {
             case KEY_UP:
                 if (highlight > 0)
                     highlight--;
                 else if (highlight == 0)
-                    highlight = sound_count;
+                    highlight = global->sound_count;
                 break;
             case KEY_DOWN:
-                if (highlight < sound_count)
+                if (highlight < global->sound_count)
                     highlight++;
-                else if (highlight == sound_count)
+                else if (highlight == global->sound_count)
                     highlight = 0;
                 break;
             case 10:
-                if (highlight == sound_count)
+                if (highlight == global->sound_count)
                     return;
                 char name[100] = "";
                 char path[256] = "";
@@ -31,7 +30,7 @@ void handle_update_sound(void)
 
                 clear();
                 mvprintw(MARGIN_TOP, MARGIN_LEFT, "Current: '%s'",
-                    sounds[highlight].name);
+                    global->sounds[highlight].name);
                 mvprintw(MARGIN_TOP + 1, MARGIN_LEFT,
                     "Enter new sound name (press Enter to keep current): ");
                 move(MARGIN_TOP + 2, 0);
@@ -56,7 +55,7 @@ void handle_update_sound(void)
                 }
 
                 mvprintw(MARGIN_TOP + 4, MARGIN_LEFT, "Current: '%s'",
-                    sounds[highlight].path);
+                    global->sounds[highlight].path);
                 mvprintw(MARGIN_TOP + 5, MARGIN_LEFT,
                     "Enter new sound path (press Enter to keep current): ");
                 move(MARGIN_TOP + 6, 0);
@@ -80,12 +79,14 @@ void handle_update_sound(void)
                     refresh();
                 }
 
-                command_upd(highlight, name, path);
+                command_upd(highlight, name, path, global);
 
                 mvprintw(MARGIN_TOP + 8, MARGIN_LEFT,
                     "Sound '%s' updated with path '%s'\n",
-                    (my_strlen(name) > 0 ? name : sounds[highlight].name),
-                    (my_strlen(path) > 0 ? path : sounds[highlight].path));
+                    (my_strlen(name) > 0 ? name
+                                         : global->sounds[highlight].name),
+                    (my_strlen(path) > 0 ? path
+                                         : global->sounds[highlight].path));
                 refresh();
                 getch();
                 return;

@@ -1,26 +1,26 @@
 #include "header.h"
 
-void command_add(char *name, char *path)
+void command_add(char *name, char *path, Global_t *global)
 {
-    my_strcpy(sounds[sound_count].name, name);
-    my_strcpy(sounds[sound_count].path, path);
-    sound_count++;
-    write_sounds();
+    my_strcpy(global->sounds[global->sound_count].name, name);
+    my_strcpy(global->sounds[global->sound_count].path, path);
+    global->sound_count++;
+    write_sounds(global);
 }
 
-void command_upd(int id, char *new_name, char *new_path)
+void command_upd(int id, char *new_name, char *new_path, Global_t *global)
 {
     if (my_strlen(new_name) > 0)
-        my_strcpy(sounds[id].name, new_name);
+        my_strcpy(global->sounds[id].name, new_name);
     if (my_strlen(new_path) > 0)
-        my_strcpy(sounds[id].path, new_path);
-    write_sounds();
+        my_strcpy(global->sounds[id].path, new_path);
+    write_sounds(global);
 }
 
-void command_del(int id)
+void command_del(int id, Global_t *global)
 {
-    sound_count--;
-    for (int i = id; i < sound_count; i++)
-        sounds[i] = sounds[i + 1];
-    write_sounds();
+    global->sound_count--;
+    for (int i = id; i < global->sound_count; i++)
+        global->sounds[i] = global->sounds[i + 1];
+    write_sounds(global);
 }
