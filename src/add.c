@@ -49,10 +49,7 @@ void handle_add_sound(void)
         refresh();
     }
 
-    strncpy(sounds[sound_count].name, name, sizeof(name));
-    strncpy(sounds[sound_count].path, path, sizeof(path));
-    sound_count++;
-    write_sounds();
+    command_add(name, path);
 
     mvprintw(MARGIN_TOP + 6, MARGIN_LEFT, "Sound '%s' added with path '%s'\n", name, path);
     refresh();

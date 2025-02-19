@@ -5,7 +5,9 @@ int sound_count = 0;
 char sounds_file_path[1024];
 
 pthread_t play_thread;
-int stop_playback = 0;
+int stop_playback = 0;  // Indique si on doit arrêter la lecture en cours
+pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
+int is_finished = FALSE;
 
 void draw_menu(int highlight)
 {
@@ -156,5 +158,5 @@ int main(int ac, char **av)
     if (ac == 1)
         return launch_ncurses();
     else
-        flag_gestion(av);
+        flag_gestion(ac, av);
 }

@@ -17,11 +17,8 @@ void handle_delete_sound(void)
         } else if (ch == 10) {
             if (highlight == sound_count)
                 return;
-            for (int i = highlight; i < sound_count - 1; i++)
-                sounds[i] = sounds[i + 1];
-            sound_count--;
-            write_sounds();
-            mvprintw(2 + sound_count + 1, 0, "Sound deleted\n");
+            command_del(highlight);
+            mvprintw(MARGIN_TOP + sound_count + 1, MARGIN_LEFT, "Sound deleted\n");
             refresh();
             getch();
             return;

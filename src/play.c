@@ -34,11 +34,16 @@ void *play_sound_thread(void *arg)
     dev = ao_open_live(driver, &format, NULL);
 
     while (mpg123_read(mh, buffer, buffer_size, &done) == MPG123_OK) {
-        if (stop_playback)
+        pthread_mutex_lock(&lock);
+        if (stop_playback) {
+            pthread_mutex_unlock(&lock);
             break;
+        }
+        pthread_mutex_unlock(&lock);
         ao_play(dev, (char *) buffer, done);
     }
 
+    is_finished = TRUE;
     free(buffer);
     ao_close(dev);
     mpg123_close(mh);
@@ -51,9 +56,15 @@ void *play_sound_thread(void *arg)
 
 void play_sound(const char *path)
 {
-    stop_playback = 1;
+    pthread_mutex_lock(&lock);
+    stop_playback = 1;// Demande l'arrêt du son en cours
+    pthread_mutex_unlock(&lock);
+    // Attend que l'ancien thread se termine
     pthread_join(play_thread, NULL);
-    stop_playback = 0;
+    pthread_mutex_lock(&lock);
+    stop_playback = 0;// Réinitialise pour la nouvelle lecture
+    pthread_mutex_unlock(&lock);
+    // Démarre un nouveau thread pour lire le son
     pthread_create(&play_thread, NULL, play_sound_thread, (void *) path);
 }
 
@@ -75,15 +86,15 @@ void handle_play_sound(void)
             case 'q':
                 return;
             case KEY_UP:
-                if (highlight > 0) {
+                if (highlight > 0)
                     highlight--;
-                } else if (highlight == 0)
+                else if (highlight == 0)
                     highlight = sound_count;
                 break;
             case KEY_DOWN:
-                if (highlight < sound_count) {
+                if (highlight < sound_count)
                     highlight++;
-                } else if (highlight == sound_count)
+                else if (highlight == sound_count)
                     highlight = 0;
                 break;
             case 10:
