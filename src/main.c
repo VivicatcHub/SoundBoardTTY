@@ -1,6 +1,6 @@
 #include "header.h"
 
-Sound sounds[MAX_SOUNDS];
+Sound_t sounds[MAX_SOUNDS];
 int sound_count = 0;
 char sounds_file_path[1024];
 
@@ -55,7 +55,7 @@ static void print_help(void)
     getch();
 }
 
-void draw_submenu(const char *title, Sound *sounds, int num_sounds,
+void draw_submenu(const char *title, Sound_t *sounds, int num_sounds,
     int highlight)
 {
     clear();

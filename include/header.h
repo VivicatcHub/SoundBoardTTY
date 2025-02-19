@@ -23,7 +23,7 @@
 typedef struct {
     char name[100];
     char path[256];
-} Sound;
+} Sound_t;
 
 ////////////////////////////////////////////////////////////
 /// ORDER
@@ -48,7 +48,7 @@ typedef struct {
     #define MARGIN_TOP 2
     #define MARGIN_LEFT 5
 
-extern Sound sounds[MAX_SOUNDS];
+extern Sound_t sounds[MAX_SOUNDS];
 extern int sound_count;
 extern pthread_t play_thread;
 extern char sounds_file_path[1024];
@@ -61,7 +61,7 @@ extern int is_finished;
 ////////////////////////////////////////////////////////////
 
 void draw_menu(int highlight);
-void draw_submenu(const char *title, Sound *sounds, int num_sounds,
+void draw_submenu(const char *title, Sound_t *sounds, int num_sounds,
     int highlight);
 void handle_add_sound(void);
 void handle_update_sound(void);
