@@ -77,6 +77,12 @@ lines:	tests_run
 branches:	tests_run
 	gcovr --exclude $(TESTS_PATH) --txt-metric branch
 
+coding-style:
+	./format.sh include/header.h
+	./format.sh include/help_fc.h
+	clear
+	mango
+
 github:
 	git remote get-url origin |	\
 	sed 's/git@github.com:/https:\/\/github.com\//' |	\
@@ -86,4 +92,4 @@ github:
 		make_lib make_clean_lib make_fclean_lib make_fclean_tests	\
 		unit_tests tests_run lines branches	\
 		install uninstall dependencies \
-		github
+		coding-style github

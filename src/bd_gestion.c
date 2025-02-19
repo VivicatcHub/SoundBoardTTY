@@ -49,6 +49,7 @@ void write_sounds(Global_t *global)
         exit(EXIT_FAILURE);
     }
     for (int i = 0; i < global->sound_count; i++)
-        fprintf(file, "%s,%s\n", global->sounds[i].name, global->sounds[i].path);
+        fprintf(file, "%s,%s\n", global->sounds[i].name,
+            global->sounds[i].path);
     fclose(file);
 }

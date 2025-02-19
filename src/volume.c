@@ -30,7 +30,7 @@ void draw_volume_menu(int highlight)
     for (int i = 0; i < 3; i++) {
         if (i == highlight)
             attron(A_REVERSE);
-        mvprintw(2 + i, 5, choices[i]);
+        mvprintw(2 + i, 5, "%s", choices[i]);
         if (i == highlight)
             attroff(A_REVERSE);
     }

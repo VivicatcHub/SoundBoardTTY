@@ -1,20 +1,20 @@
 #ifndef HEADER
-#define HEADER
+    #define HEADER
 
 ////////////////////////////////////////////////////////////
 /// INCLUDE
 ////////////////////////////////////////////////////////////
 
-#include "help_fc.h"
-#include <ao/ao.h>
-#include <limits.h>
-#include <mpg123.h>
-#include <ncurses.h>
-#include <pthread.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
+    #include "help_fc.h"
+    #include <ao/ao.h>
+    #include <limits.h>
+    #include <mpg123.h>
+    #include <ncurses.h>
+    #include <pthread.h>
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <string.h>
+    #include <unistd.h>
 
 ////////////////////////////////////////////////////////////
 /// STRUCTS
@@ -29,24 +29,24 @@ typedef struct {
 /// ORDER
 ////////////////////////////////////////////////////////////
 
-#define PLAY_SOUND 0
-#define ADD_SOUND 2
-#define UPD_SOUND 3
-#define DEL_SOUND 4
-#define VOLUME 6
-#define HELP 7
-#define QUIT 8
+    #define PLAY_SOUND 0
+    #define ADD_SOUND 2
+    #define UPD_SOUND 3
+    #define DEL_SOUND 4
+    #define VOLUME 6
+    #define HELP 7
+    #define QUIT 8
 
 ////////////////////////////////////////////////////////////
 /// VALUES
 ////////////////////////////////////////////////////////////
 
-#define MAX_LINES 9
-#define MAX_SOUNDS 100
-#define BITS 8
+    #define MAX_LINES 9
+    #define MAX_SOUNDS 100
+    #define BITS 8
 
-#define MARGIN_TOP 2
-#define MARGIN_LEFT 5
+    #define MARGIN_TOP 2
+    #define MARGIN_LEFT 5
 
 ////////////////////////////////////////////////////////////
 /// GLOBAL
