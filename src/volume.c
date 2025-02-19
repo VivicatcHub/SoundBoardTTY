@@ -1,6 +1,6 @@
 #include "header.h"
 
-int get_volume()
+int get_volume(void)
 {
     FILE *fp;
     char path[1035];
@@ -22,9 +22,12 @@ void draw_volume_menu(int highlight)
 {
     int volume = get_volume();
     char volume_text[20];
-    snprintf(volume_text, sizeof(volume_text), "Volume: %d%s", volume, "%%");
+    char *choices[3];
 
-    const char *choices[3] = {"[-]", volume_text, "[+]"};
+    snprintf(volume_text, sizeof(volume_text), "Volume: %d%%", volume);
+    choices[0] = "[-]";
+    choices[1] = volume_text;
+    choices[2] = "[+]";
     clear();
     mvprintw(0, 5, "Réglage du volume");
     for (int i = 0; i < 3; i++) {
@@ -37,45 +40,48 @@ void draw_volume_menu(int highlight)
     refresh();
 }
 
-void set_volume(const char *cmd)
+void set_volume(char *cmd)
 {
     FILE *fp = popen(cmd, "r");
+
     if (fp != NULL)
         pclose(fp);
+}
+
+static void key_gestion(int ch, int *highlight)
+{
+    switch (ch) {
+        case KEY_UP:
+            *highlight = (*highlight > 0 ? *highlight - 1 : *highlight);
+            break;
+        case KEY_DOWN:
+            *highlight = (*highlight < 2 ? *highlight + 1 : *highlight);
+            break;
+        case KEY_LEFT:
+            set_volume("amixer set Master 2%-");
+            break;
+        case KEY_RIGHT:
+            set_volume("amixer set Master 2%+");
+            break;
+    }
 }
 
 void handle_volume(void)
 {
     int highlight = 1;
-    int ch;
-    draw_volume_menu(highlight);
+    int ch = 0;
 
-    while ((ch = getch()) != 'q') {
-        switch (ch) {
-            case KEY_UP:
-                if (highlight > 0)
-                    highlight--;
-                break;
-            case KEY_DOWN:
-                if (highlight < 2)
-                    highlight++;
-                break;
-            case 10:
-                if (highlight == 0)
-                    set_volume("amixer set Master 2%-");
-                else if (highlight == 2)
-                    set_volume("amixer set Master 2%+");
-                else if (highlight == 1)
-                    return;
-                break;
-            case KEY_LEFT:
-                set_volume("amixer set Master 2%-");
-                break;
-            case KEY_RIGHT:
-                set_volume("amixer set Master 2%+");
-                break;
-        }
+    draw_volume_menu(highlight);
+    while (ch != 'q') {
+        key_gestion(ch, &highlight);
+        if (highlight == 0 && ch == 10)
+            set_volume("amixer set Master 2%-");
+        if (highlight == 1 && ch == 10)
+            return;
+        if (highlight == 2 && ch == 10)
+            set_volume("amixer set Master 2%+");
         clear();
         draw_volume_menu(highlight);
+        ch = getch();
     }
 }

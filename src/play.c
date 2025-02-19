@@ -99,15 +99,14 @@ static void key_gestion(int ch, int *highlight, Global_t *global)
 {
     switch (ch) {
         case KEY_UP:
-            highlight = (highlight > 0 ? highlight - 1 : global->sound_count);
+            *highlight =
+                (*highlight > 0 ? *highlight - 1 : global->sound_count);
             break;
         case KEY_DOWN:
-            highlight = (highlight < global->sound_count ? highlight + 1 : 0);
+            *highlight =
+                (*highlight < global->sound_count ? *highlight + 1 : 0);
             break;
         case 10:
-            if (highlight == global->sound_count)
-                return;
-            refresh();
             play_sound(global->sounds[*highlight].path, global);
     }
 }
@@ -117,15 +116,18 @@ void handle_play_sound(Global_t *global)
     int highlight = 0;
     int ch = 0;
 
+    if (global->sound_count == 0) {
+        mvprintw(0, 5, "Aucun son dans la liste\n");
+        refresh();
+        getch();
+        return;
+    }
     while (ch != 'q') {
-        if (global->sound_count == 0) {
-            mvprintw(0, 5, "Aucun son dans la liste\n");
-            refresh();
-            getch();
+        if (ch == 10 && highlight == global->sound_count)
             return;
-        }
-        draw_submenu("Select a sound to play", global, highlight);
         key_gestion(ch, &highlight, global);
+        refresh();
+        draw_submenu("Select a sound to play", global, highlight);
         ch = getch();
     }
 }

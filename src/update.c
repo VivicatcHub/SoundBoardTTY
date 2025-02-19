@@ -5,8 +5,7 @@ static void enter_function(int highlight, Global_t *global)
     char name[256] = "";
     char path[256] = "";
 
-    if (highlight == global->sound_count)
-        return;
+    clear();
     mvprintw(MARGIN_TOP, MARGIN_LEFT,
         "Enter new sound name (press Enter to keep '%s'): ",
         global->sounds[highlight].name);
@@ -22,6 +21,7 @@ static void enter_function(int highlight, Global_t *global)
         "Sound '%s' updated with path '%s'\n",
         (my_strlen(name) > 0 ? name : global->sounds[highlight].name),
         (my_strlen(path) > 0 ? path : global->sounds[highlight].path));
+    getch();
 }
 
 void handle_update_sound(Global_t *global)
@@ -30,7 +30,8 @@ void handle_update_sound(Global_t *global)
     int ch = 0;
 
     while (ch != 'q') {
-        draw_submenu("Select a sound to update", global, id);
+        if (id == global->sound_count && ch == 10)
+            return;
         switch (ch) {
             case KEY_UP:
                 id = (id > 0 ? id - 1 : global->sound_count);
@@ -39,11 +40,10 @@ void handle_update_sound(Global_t *global)
                 id = (id < global->sound_count ? id + 1 : 0);
                 break;
             case 10:
-                clear();
                 enter_function(id, global);
-                getch();
                 refresh();
         }
+        draw_submenu("Select a sound to update", global, id);
         ch = getch();
     }
 }

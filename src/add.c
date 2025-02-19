@@ -31,11 +31,9 @@ void handle_add_sound(Global_t *global)
     clear();
     mvprintw(MARGIN_TOP, MARGIN_LEFT, "Enter sound name: ");
     move(MARGIN_TOP + 1, 0);
-    refresh();
     input_ncurses(name, 1);
     mvprintw(MARGIN_TOP + 3, MARGIN_LEFT, "Enter sound path: ");
     move(MARGIN_TOP + 4, 0);
-    refresh();
     input_ncurses(path, 4);
     command_add(name, path, global);
     mvprintw(MARGIN_TOP + 6, MARGIN_LEFT, "Sound '%s' added with path '%s'\n",
