@@ -1,6 +1,6 @@
 #include "header.h"
 
-static void input_ncurses(char *buffer, int begin)
+void input_ncurses(char *buffer, int begin)
 {
     int ch = getch();
     long unsigned int pos = 0;

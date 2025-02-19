@@ -76,6 +76,7 @@ void draw_submenu(const char *title, Global_t *global, int highlight);
 ////////////////////////////////////////////////////////////
 
 void handle_add_sound(Global_t *global);
+void input_ncurses(char *buffer, int begin);
 
 ////////////////////////////////////////////////////////////
 /// bd_gestion
