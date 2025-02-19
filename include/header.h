@@ -61,6 +61,7 @@ typedef struct Global {
     pthread_mutex_t lock;
     int is_finished;
     const char *path;
+    ao_device *dev;
 } Global_t;
 
 ////////////////////////////////////////////////////////////
