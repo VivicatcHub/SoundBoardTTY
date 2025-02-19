@@ -9,8 +9,8 @@ void handle_add_sound(void)
     long unsigned int path_pos = 0;
 
     clear();
-    mvprintw(0, 0, "Enter sound name: ");
-    move(1, 0);
+    mvprintw(MARGIN_TOP, MARGIN_LEFT, "Enter sound name: ");
+    move(MARGIN_TOP + 1, 0);
     refresh();
 
     while ((ch = getch()) != '\n') {
@@ -18,19 +18,19 @@ void handle_add_sound(void)
             if (name_pos > 0) {
                 name_pos--;
                 name[name_pos] = '\0';
-                mvprintw(1, name_pos, " ");
-                move(1, name_pos);
+                mvprintw(MARGIN_TOP + 1, MARGIN_LEFT + name_pos, " ");
+                move(1, MARGIN_LEFT + name_pos);
             }
         } else if (name_pos < sizeof(name) - 1) {
             name[name_pos++] = ch;
             name[name_pos] = '\0';
-            mvprintw(1, name_pos - 1, "%c", ch);
+            mvprintw(MARGIN_TOP + 1, MARGIN_LEFT + name_pos - 1, "%c", ch);
         }
         refresh();
     }
 
-    mvprintw(2, 0, "Enter sound path: ");
-    move(3, 0);
+    mvprintw(MARGIN_TOP + 3, MARGIN_LEFT, "Enter sound path: ");
+    move(MARGIN_TOP + 4, 0);
     refresh();
 
     while ((ch = getch()) != '\n') {
@@ -38,13 +38,13 @@ void handle_add_sound(void)
             if (path_pos > 0) {
                 path_pos--;
                 path[path_pos] = '\0';
-                mvprintw(3, path_pos, " ");
+                mvprintw(MARGIN_TOP + 4, MARGIN_LEFT + path_pos, " ");
                 move(3, path_pos);
             }
         } else if (path_pos < sizeof(path) - 1) {
             path[path_pos++] = ch;
             path[path_pos] = '\0';
-            mvprintw(3, path_pos - 1, "%c", ch);
+            mvprintw(MARGIN_TOP + 4, MARGIN_LEFT + path_pos - 1, "%c", ch);
         }
         refresh();
     }
@@ -54,7 +54,7 @@ void handle_add_sound(void)
     sound_count++;
     write_sounds();
 
-    mvprintw(5, 0, "Sound '%s' added with path '%s'\n", name, path);
+    mvprintw(MARGIN_TOP + 6, MARGIN_LEFT, "Sound '%s' added with path '%s'\n", name, path);
     refresh();
     getch();
 }

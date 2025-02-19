@@ -9,24 +9,24 @@ int stop_playback = 0;
 
 void draw_menu(int highlight)
 {
-    const char *choices[MAX_LINES] = {"Jouer un son", "Ajouter un son",
-        "Mettre à jour un son", "Supprimer un son", "Volume", "Aide",
+    const char *choices[MAX_LINES] = {"Jouer un son", "", "Ajouter un son",
+        "Mettre à jour un son", "Supprimer un son", "", "Volume", "Aide",
         "Quitter"};
     for (int i = 0; i < MAX_LINES; i++) {
         if (i == highlight)
             attron(A_REVERSE);
-        if (i == 1)// Ajouter un son
+        if (i == ADD_SOUND)
             attron(COLOR_PAIR(2));
-        else if (i == 3)// Supprimer un son
+        else if (i == DEL_SOUND)
             attron(COLOR_PAIR(3));
         else
             attron(COLOR_PAIR(4));
-        mvprintw(2 + i, 5, choices[i]);
+        mvprintw(MARGIN_TOP + i, MARGIN_LEFT, choices[i]);
         if (i == highlight)
             attroff(A_REVERSE);
-        if (i == 1)
+        if (i == ADD_SOUND)
             attroff(COLOR_PAIR(2));
-        else if (i == 3)
+        else if (i == DEL_SOUND)
             attroff(COLOR_PAIR(3));
         else
             attroff(COLOR_PAIR(4));
@@ -37,13 +37,18 @@ void draw_menu(int highlight)
 static void print_help(void)
 {
     clear();
-    mvprintw(2 + 0, 5, "Usage: soundboard [options]\n");
-    mvprintw(2 + 1, 5, "Options:\n");
-    mvprintw(2 + 2, 5, "  -h, --help          Show this help message\n");
-    mvprintw(2 + 3, 5, "  -a, --add           Add a sound/music\n");
-    mvprintw(2 + 4, 5, "  -u, --update        Update a sound/music\n");
-    mvprintw(2 + 5, 5, "  -d, --delete        Delete a sound/music\n");
-    mvprintw(2 + 6, 5, "  -p, --play [name]   Play a sound by name\n");
+    mvprintw(MARGIN_TOP + 0, MARGIN_LEFT, "Usage: soundboard [options]\n");
+    mvprintw(MARGIN_TOP + 1, MARGIN_LEFT, "Options:\n");
+    mvprintw(MARGIN_TOP + 2, MARGIN_LEFT,
+        "  -h, --help          Show this help message\n");
+    mvprintw(MARGIN_TOP + 3, MARGIN_LEFT,
+        "  -a, --add           Add a sound/music\n");
+    mvprintw(MARGIN_TOP + 4, MARGIN_LEFT,
+        "  -u, --update        Update a sound/music\n");
+    mvprintw(MARGIN_TOP + 5, MARGIN_LEFT,
+        "  -d, --delete        Delete a sound/music\n");
+    mvprintw(MARGIN_TOP + 6, MARGIN_LEFT,
+        "  -p, --play [name]   Play a sound by name\n");
     refresh();
     getch();
 }
@@ -52,20 +57,20 @@ void draw_submenu(const char *title, Sound *sounds, int num_sounds,
     int highlight)
 {
     clear();
-    mvprintw(0, 0, title);
+    mvprintw(0, MARGIN_LEFT, title);
     for (int i = 0; i < num_sounds; i++) {
         if (i == highlight)
             attron(A_REVERSE);
         attron(COLOR_PAIR(4));
-        mvprintw(2 + i, 5, sounds[i].name);
+        mvprintw(MARGIN_TOP + i, MARGIN_LEFT, sounds[i].name);
         if (i == highlight)
             attroff(A_REVERSE);
         attroff(COLOR_PAIR(4));
     }
-    mvprintw(2 + num_sounds, 5, "Retour");
+    mvprintw(MARGIN_TOP + num_sounds, MARGIN_LEFT, "Retour");
     if (highlight == num_sounds)
         attron(A_REVERSE);
-    mvprintw(2 + num_sounds, 5, "Retour");
+    mvprintw(MARGIN_TOP + num_sounds, MARGIN_LEFT, "Retour");
     if (highlight == num_sounds)
         attroff(A_REVERSE);
     refresh();
@@ -94,34 +99,42 @@ static int launch_ncurses(void)
     while ((ch = getch()) != 'q') {
         switch (ch) {
             case KEY_UP:
-                if (highlight > 0)
+                if (highlight > 0) {
                     highlight--;
+                    if (highlight == 1 || highlight == 5)
+                        highlight--;
+                } else if (highlight == 0)
+                    highlight = MAX_LINES - 1;
                 break;
             case KEY_DOWN:
-                if (highlight < MAX_LINES - 1)
+                if (highlight < MAX_LINES - 1) {
                     highlight++;
+                    if (highlight == 1 || highlight == 5)
+                        highlight++;
+                } else if (highlight == MAX_LINES - 1)
+                    highlight = 0;
                 break;
             case 10:// Enter key
                 switch (highlight) {
-                    case 0:
+                    case PLAY_SOUND:
                         handle_play_sound();
                         break;
-                    case 1:
+                    case ADD_SOUND:
                         handle_add_sound();
                         break;
-                    case 2:
+                    case UPD_SOUND:
                         handle_update_sound();
                         break;
-                    case 3:
+                    case DEL_SOUND:
                         handle_delete_sound();
                         break;
-                    case 4:
+                    case VOLUME:
                         handle_volume();
                         break;
-                    case 5:
+                    case HELP:
                         print_help();
                         break;
-                    case 6:
+                    case QUIT:
                         endwin();
                         return 0;
                 }

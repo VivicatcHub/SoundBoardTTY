@@ -71,19 +71,28 @@ void handle_play_sound(void)
 
         draw_submenu("Select a sound to play", sounds, sound_count, highlight);
         ch = getch();
-        if (ch == KEY_UP) {
-            if (highlight > 0)
-                highlight--;
-        } else if (ch == KEY_DOWN) {
-            if (highlight < sound_count)
-                highlight++;
-        } else if (ch == 10) {
-            if (highlight == sound_count)
+        switch (ch) {
+            case 'q':
                 return;
-            mvprintw(2 + sound_count + 1, 0, "Playing sound '%s'\n",
-                sounds[highlight].name);
-            refresh();
-            play_sound(sounds[highlight].path);
+            case KEY_UP:
+                if (highlight > 0) {
+                    highlight--;
+                } else if (highlight == 0)
+                    highlight = sound_count;
+                break;
+            case KEY_DOWN:
+                if (highlight < sound_count) {
+                    highlight++;
+                } else if (highlight == sound_count)
+                    highlight = 0;
+                break;
+            case 10:
+                if (highlight == sound_count)
+                    return;
+                // mvprintw(2 + sound_count + 1, 0, "Playing sound '%s'\n",
+                //     sounds[highlight].name);
+                refresh();
+                play_sound(sounds[highlight].path);
         }
     }
 }

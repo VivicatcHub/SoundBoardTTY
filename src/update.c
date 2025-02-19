@@ -8,34 +8,85 @@ void handle_update_sound(void)
         draw_submenu("Select a sound to update", sounds, sound_count,
             highlight);
         ch = getch();
-        if (ch == KEY_UP) {
-            if (highlight > 0)
-                highlight--;
-        } else if (ch == KEY_DOWN) {
-            if (highlight < sound_count)
-                highlight++;
-        } else if (ch == 10) {
-            if (highlight == sound_count)
+        switch (ch) {
+            case KEY_UP:
+                if (highlight > 0)
+                    highlight--;
+                else if (highlight == 0)
+                    highlight = sound_count;
+                break;
+            case KEY_DOWN:
+                if (highlight < sound_count)
+                    highlight++;
+                else if (highlight == sound_count)
+                    highlight = 0;
+                break;
+            case 10:
+                if (highlight == sound_count)
+                    return;
+                char name[100];
+                char path[256];
+                long unsigned int name_pos = 0;
+                long unsigned int path_pos = 0;
+
+                clear();
+                mvprintw(MARGIN_TOP, MARGIN_LEFT,
+                    "Enter new sound name (press Enter to keep current): ");
+                move(MARGIN_TOP + 1, 0);
+                refresh();
+
+                while ((ch = getch()) != '\n') {
+                    if (ch == KEY_BACKSPACE || ch == 127) {
+                        if (name_pos > 0) {
+                            name_pos--;
+                            name[name_pos] = '\0';
+                            mvprintw(MARGIN_TOP + 1, MARGIN_LEFT + name_pos,
+                                " ");
+                            move(1, MARGIN_LEFT + name_pos);
+                        }
+                    } else if (name_pos < sizeof(name) - 1) {
+                        name[name_pos++] = ch;
+                        name[name_pos] = '\0';
+                        mvprintw(MARGIN_TOP + 1, MARGIN_LEFT + name_pos - 1,
+                            "%c", ch);
+                    }
+                    refresh();
+                }
+
+                mvprintw(MARGIN_TOP + 3, MARGIN_LEFT,
+                    "Enter new sound path (press Enter to keep current): ");
+                move(MARGIN_TOP + 4, 0);
+                refresh();
+
+                while ((ch = getch()) != '\n') {
+                    if (ch == KEY_BACKSPACE || ch == 127) {
+                        if (path_pos > 0) {
+                            path_pos--;
+                            path[path_pos] = '\0';
+                            mvprintw(MARGIN_TOP + 4, MARGIN_LEFT + path_pos,
+                                " ");
+                            move(3, path_pos);
+                        }
+                    } else if (path_pos < sizeof(path) - 1) {
+                        path[path_pos++] = ch;
+                        path[path_pos] = '\0';
+                        mvprintw(MARGIN_TOP + 4, MARGIN_LEFT + path_pos - 1,
+                            "%c", ch);
+                    }
+                    refresh();
+                }
+
+                if (strlen(name) > 0)
+                    strncpy(sounds[highlight].name, name, sizeof(name));
+                if (strlen(path) > 0)
+                    strncpy(sounds[highlight].path, path, sizeof(path));
+                write_sounds();
+
+                mvprintw(MARGIN_TOP + 6, MARGIN_LEFT,
+                    "Sound '%s' updated with path '%s'\n", name, path);
+                refresh();
+                getch();
                 return;
-            char name[100];
-            char path[256];
-            mvprintw(2 + sound_count + 1, 0,
-                "Enter new sound name (press Enter to keep current): ");
-            getstr(name);
-            mvprintw(3 + sound_count + 1, 0,
-                "Enter new sound path (press Enter to keep current): ");
-            getstr(path);
-            if (strlen(name) > 0)
-                strncpy(sounds[highlight].name, name, sizeof(name));
-            if (strlen(path) > 0)
-                strncpy(sounds[highlight].path, path, sizeof(path));
-            write_sounds();
-            mvprintw(4 + sound_count + 1, 0,
-                "Sound '%s' updated with path '%s'\n", sounds[highlight].name,
-                sounds[highlight].path);
-            refresh();
-            getch();
-            return;
         }
     }
 }

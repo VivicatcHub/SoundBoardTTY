@@ -1,10 +1,3 @@
-##
-## EPITECH PROJECT, 2024
-## EmptyRepo
-## File description:
-## Makefile
-##
-
 SRCS	=	$(wildcard *.c)
 
 OBJS	=	$(SRCS:%.c=%.o)
