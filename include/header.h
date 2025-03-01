@@ -102,7 +102,7 @@ void flag_gestion(int ac, char **av, Global_t *global);
 ////////////////////////////////////////////////////////////
 
 void handle_play_sound(Global_t *global);
-void play_sound(const char *path, Global_t *global);
+void play_sound(const char *file_path, int is_ncurses);
 
 ////////////////////////////////////////////////////////////
 /// update

@@ -56,9 +56,7 @@ static void flag_p(int ac, char **av, Global_t *global)
     for (int i = 0; i < global->sound_count; i++)
         if (my_strcmp(global->sounds[i].name, av[2]) == 0)
             id = i;
-    play_sound(global->sounds[id].path, global);
-    while (!global->is_finished)
-        sleep(0.1);
+    play_sound(global->sounds[id].path, FALSE);
 }
 
 void flag_gestion(int ac, char **av, Global_t *global)

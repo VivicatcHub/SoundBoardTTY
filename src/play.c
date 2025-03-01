@@ -1,98 +1,45 @@
 #include "header.h"
+#include <mpv/client.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-static int init_audio_system(mpg123_handle **mh, ao_device **dev,
-    ao_sample_format *format, const char *path)
+static void launch_sound(mpv_handle *mpv, const char *file_path,
+    int is_ncurses)
 {
-    int err;
-    int driver;
-    long rate;
-    int channels;
-    int encoding;
+    const char *cmd[] = {"loadfile", file_path, "replace", NULL};
+    mpv_event *event;
 
-    ao_initialize();
-    driver = ao_default_driver_id();
-    mpg123_init();
-    *mh = mpg123_new(NULL, &err);
-    mpg123_open(*mh, path);
-    mpg123_getformat(*mh, &rate, &channels, &encoding);
-    format->bits = mpg123_encsize(encoding) * BITS;
-    format->rate = rate;
-    format->channels = channels;
-    format->byte_format = AO_FMT_NATIVE;
-    format->matrix = 0;
-    *dev = ao_open_live(driver, format, NULL);
-    return (*dev && *mh) ? 0 : -1;
-}
-
-static void play_audio_loop(Global_t *global, mpg123_handle *mh,
-    unsigned char *buffer, size_t buffer_size)
-{
-    size_t done;
-
-    while (mpg123_read(mh, buffer, buffer_size, &done) == MPG123_OK) {
-        pthread_mutex_lock(&(global->lock));
-        if (global->stop_playback) {
-            global->is_finished = TRUE;
-            pthread_mutex_unlock(&(global->lock));
+    mpv_command_string(mpv, "stop");
+    mpv_set_property_string(mpv, "video", "no");
+    if (mpv_command(mpv, cmd) < 0) {
+        fprintf(stderr, "Erreur: Impossible de lire le fichier %s\n",
+            file_path);
+    }
+    while (!is_ncurses) {
+        event = mpv_wait_event(mpv, 1000);
+        if (event->event_id == MPV_EVENT_END_FILE)
             break;
+    }
+}
+
+void play_sound(const char *file_path, int is_ncurses)
+{
+    static mpv_handle *mpv = NULL;
+
+    if (!mpv) {
+        mpv = mpv_create();
+        if (!mpv) {
+            fprintf(stderr, "Erreur: Impossible d'initialiser MPV\n");
+            return;
         }
-        pthread_mutex_unlock(&(global->lock));
-        ao_play(global->dev, (char *) buffer, done);
+        if (mpv_initialize(mpv) < 0) {
+            fprintf(stderr, "Erreur: Échec de l'initialisation de MPV\n");
+            mpv_destroy(mpv);
+            mpv = NULL;
+            return;
+        }
     }
-}
-
-static void cleanup_audio(mpg123_handle *mh, ao_device *dev,
-    unsigned char *buffer)
-{
-    free(buffer);
-    ao_close(dev);
-    mpg123_close(mh);
-    mpg123_delete(mh);
-    mpg123_exit();
-    ao_shutdown();
-}
-
-void *play_sound_thread(void *arg)
-{
-    Global_t *global = (Global_t *) arg;
-    mpg123_handle *mh;
-    ao_device *dev;
-    ao_sample_format format;
-    unsigned char *buffer;
-    size_t buffer_size;
-
-    if (init_audio_system(&mh, &dev, &format, global->path) == -1)
-        return NULL;
-    buffer_size = mpg123_outblock(mh);
-    buffer = malloc(buffer_size);
-    global->dev = dev;
-    play_audio_loop(global, mh, buffer, buffer_size);
-    pthread_mutex_lock(&(global->lock));
-    global->is_finished = TRUE;
-    pthread_mutex_unlock(&(global->lock));
-    cleanup_audio(mh, dev, buffer);
-    return NULL;
-}
-
-void play_sound(const char *path, Global_t *global)
-{
-    pthread_mutex_lock(&(global->lock));
-    global->stop_playback = 1;
-    pthread_mutex_unlock(&(global->lock));
-    if (global->play_thread && !global->is_finished) {
-        pthread_join(global->play_thread, NULL);
-        global->play_thread = 0;
-    }
-    pthread_mutex_lock(&(global->lock));
-    global->stop_playback = 0;
-    global->is_finished = FALSE;
-    global->path = path;
-    pthread_mutex_unlock(&(global->lock));
-    if (pthread_create(&(global->play_thread), NULL, play_sound_thread,
-            (void *) global)
-        != 0) {
-        perror("pthread_create failed");
-    }
+    launch_sound(mpv, file_path, is_ncurses);
 }
 
 static void key_gestion(int ch, int *highlight, Global_t *global)
@@ -107,7 +54,7 @@ static void key_gestion(int ch, int *highlight, Global_t *global)
                 (*highlight < global->sound_count ? *highlight + 1 : 0);
             break;
         case 10:
-            play_sound(global->sounds[*highlight].path, global);
+            play_sound(global->sounds[*highlight].path, TRUE);
     }
 }
 
@@ -131,55 +78,3 @@ void handle_play_sound(Global_t *global)
         ch = getch();
     }
 }
-
-// void *play_sound_thread(void *global)
-// {
-//     const char *path = ((Global_t *) global)->path;
-//     mpg123_handle *mh;
-//     unsigned char *buffer;
-//     size_t buffer_size;
-//     size_t done;
-//     int err;
-//     int driver;
-//     ao_device *dev;
-//     ao_sample_format format;
-//     int channels;
-//     int encoding;
-//     long rate;
-
-//     ao_initialize();
-//     driver = ao_default_driver_id();
-//     mpg123_init();
-//     mh = mpg123_new(NULL, &err);
-//     buffer_size = mpg123_outblock(mh);
-//     buffer = (unsigned char *) malloc(buffer_size * sizeof(unsigned char));
-//     mpg123_open(mh, path);
-//     mpg123_getformat(mh, &rate, &channels, &encoding);
-//     format.bits = mpg123_encsize(encoding) * BITS;
-//     format.rate = rate;
-//     format.channels = channels;
-//     format.byte_format = AO_FMT_NATIVE;
-//     format.matrix = 0;
-//     dev = ao_open_live(driver, &format, NULL);
-//     while (mpg123_read(mh, buffer, buffer_size, &done) == MPG123_OK) {
-//         pthread_mutex_lock(&(((Global_t *) global)->lock));
-//         if (((Global_t *) global)->stop_playback) {
-//             ((Global_t *) global)->is_finished = TRUE;
-//             pthread_mutex_unlock(&(((Global_t *) global)->lock));
-//             break;
-//         }
-//         pthread_mutex_unlock(&(((Global_t *) global)->lock));
-//         ao_play(dev, (char *) buffer, done);
-//     }
-//     pthread_mutex_lock(&(((Global_t *) global)->lock));
-//     ((Global_t *) global)->is_finished = TRUE;
-//     pthread_mutex_unlock(&(((Global_t *) global)->lock));
-//     ((Global_t *) global)->is_finished = TRUE;
-//     free(buffer);
-//     ao_close(dev);
-//     mpg123_close(mh);
-//     mpg123_delete(mh);
-//     mpg123_exit();
-//     ao_shutdown();
-//     return NULL;
-// }
