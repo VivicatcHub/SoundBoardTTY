@@ -61,14 +61,14 @@ static void flag_p(int ac, char **av, Global_t *global)
 
 void flag_gestion(int ac, char **av, Global_t *global)
 {
-    if (my_strcmp(av[1], "-h") == 0)
+    if (my_strcmp(av[1], "-h") == 0 || my_strcmp(av[1], "--help") == 0)
         print_help();
-    if (my_strcmp(av[1], "-a") == 0)
+    if (my_strcmp(av[1], "-a") == 0 || my_strcmp(av[1], "--add") == 0)
         flag_a(ac, av, global);
-    if (my_strcmp(av[1], "-u") == 0)
+    if (my_strcmp(av[1], "-u") == 0 || my_strcmp(av[1], "--update") == 0)
         flag_u(ac, av, global);
-    if (my_strcmp(av[1], "-d") == 0)
+    if (my_strcmp(av[1], "-d") == 0 || my_strcmp(av[1], "--delete") == 0)
         flag_d(ac, av, global);
-    if (my_strcmp(av[1], "-p") == 0)
+    if (my_strcmp(av[1], "-p") == 0 || my_strcmp(av[1], "--play") == 0)
         flag_p(ac, av, global);
 }
