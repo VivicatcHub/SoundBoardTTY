@@ -26,8 +26,6 @@ else
 	CFLAGS	+=	-O2
 endif
 
-TESTS_PATH	=	tests/
-
 all:	$(BIN_NAME)
 
 make_lib:
@@ -45,10 +43,7 @@ clean:	make_clean_lib
 make_fclean_lib:
 	make fclean -C $(LIB_HF_PATH)
 
-make_fclean_tests:
-	make fclean -C $(TESTS_PATH)
-
-fclean:	clean make_fclean_lib make_fclean_tests
+fclean:	clean make_fclean_lib
 	rm -f $(BIN_NAME)
 	rm -f *.txt
 

@@ -10,12 +10,12 @@ static void enter_function(int highlight, Global_t *global)
         "Enter new sound name (press Enter to keep '%s'): ",
         global->sounds[highlight].name);
     move(MARGIN_TOP + 1, 0);
-    input_ncurses(name, 1);
+    input_ncurses(name, sizeof(name), 1);
     mvprintw(MARGIN_TOP + 3, MARGIN_LEFT,
         "Enter new sound path (press Enter to keep '%s): ",
         global->sounds[highlight].path);
     move(MARGIN_TOP + 4, 0);
-    input_ncurses(path, 4);
+    input_ncurses(path, sizeof(path), 4);
     command_upd(highlight, name, path, global);
     mvprintw(MARGIN_TOP + 6, MARGIN_LEFT,
         "Sound '%s' updated with path '%s'\n",
