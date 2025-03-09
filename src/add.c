@@ -26,7 +26,7 @@ void input_ncurses(char *buffer, size_t size, int begin)
 void handle_add_sound(Global_t *global)
 {
     char name[MAX_NAME] = "";
-    char path[MAX_LINES] = "";
+    char path[MAX_PATH] = "";
 
     clear();
     mvprintw(MARGIN_TOP, MARGIN_LEFT, "Enter sound name: ");
