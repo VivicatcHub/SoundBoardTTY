@@ -2,7 +2,7 @@
 
 static void delete_char(int *index, Global_t *global)
 {
-    *index--;
+    (*index)--;
     global->search[*index] = '\0';
     move(0, 12 + *index);
 }
@@ -10,25 +10,26 @@ static void delete_char(int *index, Global_t *global)
 static void add_char(int *index, Global_t *global, int ch)
 {
     global->search[*index] = ch;
-    *index++;
+    (*index)++;
     global->search[*index] = '\0';
 }
 
-static void display_searching(Global_t *global, int highlight)
+static void display_searching(Global_t *global, int highlight,
+    const char *title)
 {
-    draw_submenu("Select a sound to play", global, highlight);
+    draw_submenu(title, global, highlight);
     mvprintw(MARGIN_TOP_SEARCH, MARGIN_LEFT, "Rechercher: ");
     mvprintw(MARGIN_TOP_SEARCH, MARGIN_LEFT + 12, "%s", global->search);
     refresh();
 }
 
-int search_programm(Global_t *global, int *highlight)
+int search_programm(Global_t *global, int *highlight, const char *title)
 {
-    int index = 0;
-    int ch = getch();
+    int index = my_strlen(global->search);
+    int ch = 0;
 
     cbreak();
-    draw_submenu("Select a sound to play", global, *highlight);
+    draw_submenu(title, global, *highlight);
     mvprintw(MARGIN_TOP_SEARCH, MARGIN_LEFT, "Rechercher: ");
     while (ch != '\n') {
         if ((ch == KEY_BACKSPACE || ch == 127) && index > 0)
@@ -39,7 +40,7 @@ int search_programm(Global_t *global, int *highlight)
             return global->sound_displayed;
         if (ch == KEY_DOWN)
             return 0;
-        display_searching(global, *highlight);
+        display_searching(global, *highlight, title);
         ch = getch();
     }
     return *highlight;

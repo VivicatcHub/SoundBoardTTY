@@ -58,7 +58,8 @@ static void key_gestion(int ch, int *highlight, Global_t *global)
             break;
         case 's':
             *highlight = -1;
-            *highlight = search_programm(global, highlight);
+            *highlight =
+                search_programm(global, highlight, "Select a sound to play");
     }
 }
 
@@ -74,7 +75,7 @@ void handle_play_sound(Global_t *global)
         return;
     }
     while (ch != 'q') {
-        if (ch == 10 && highlight == global->sound_displayed)
+        if (ch == '\n' && highlight == global->sound_displayed)
             return;
         key_gestion(ch, &highlight, global);
         refresh();

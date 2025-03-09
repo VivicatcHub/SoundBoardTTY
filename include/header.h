@@ -50,6 +50,7 @@ typedef struct {
     #define MARGIN_LEFT 5
 
     #define MAX_NAME 32
+    #define MAX_PATH 256
 
 ////////////////////////////////////////////////////////////
 /// GLOBAL
@@ -134,6 +135,6 @@ void command_del(int id, Global_t *global);
 /// search_program
 ////////////////////////////////////////////////////////////
 
-int search_programm(Global_t *global, int *highlight);
+int search_programm(Global_t *global, int *highlight, const char *title);
 
 #endif /* !HEADER */
