@@ -45,8 +45,11 @@ typedef struct {
     #define MAX_SOUNDS 100
     #define BITS 8
 
-    #define MARGIN_TOP 2
+    #define MARGIN_TOP_SEARCH 2
+    #define MARGIN_TOP 4
     #define MARGIN_LEFT 5
+
+    #define MAX_NAME 32
 
 ////////////////////////////////////////////////////////////
 /// GLOBAL
@@ -62,10 +65,13 @@ typedef struct Global {
     int is_finished;
     const char *path;
     ao_device *dev;
+    char search[MAX_NAME];
+    Sound_t selected;
+    int sound_displayed;
 } Global_t;
 
 ////////////////////////////////////////////////////////////
-/// main
+/// display_submenu
 ////////////////////////////////////////////////////////////
 
 void draw_menu(int highlight);
@@ -123,5 +129,11 @@ void handle_volume(void);
 void command_add(char *name, char *path, Global_t *global);
 void command_upd(int id, char *new_name, char *new_path, Global_t *global);
 void command_del(int id, Global_t *global);
+
+////////////////////////////////////////////////////////////
+/// search_program
+////////////////////////////////////////////////////////////
+
+int search_programm(Global_t *global, int *highlight);
 
 #endif /* !HEADER */

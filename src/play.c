@@ -47,14 +47,18 @@ static void key_gestion(int ch, int *highlight, Global_t *global)
     switch (ch) {
         case KEY_UP:
             *highlight =
-                (*highlight > 0 ? *highlight - 1 : global->sound_count);
+                (*highlight > 0 ? *highlight - 1 : global->sound_displayed);
             break;
         case KEY_DOWN:
             *highlight =
-                (*highlight < global->sound_count ? *highlight + 1 : 0);
+                (*highlight < global->sound_displayed ? *highlight + 1 : 0);
             break;
-        case 10:
-            play_sound(global->sounds[*highlight].path, TRUE);
+        case '\n':
+            play_sound(global->selected.path, TRUE);
+            break;
+        case 's':
+            *highlight = -1;
+            *highlight = search_programm(global, highlight);
     }
 }
 
@@ -70,7 +74,7 @@ void handle_play_sound(Global_t *global)
         return;
     }
     while (ch != 'q') {
-        if (ch == 10 && highlight == global->sound_count)
+        if (ch == 10 && highlight == global->sound_displayed)
             return;
         key_gestion(ch, &highlight, global);
         refresh();

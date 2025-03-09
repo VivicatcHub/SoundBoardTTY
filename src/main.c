@@ -75,28 +75,6 @@ static void print_help(void)
     getch();
 }
 
-void draw_submenu(const char *title, Global_t *global, int highlight)
-{
-    clear();
-    mvprintw(0, MARGIN_LEFT, "%s", title);
-    for (int i = 0; i < global->sound_count; i++) {
-        if (i == highlight)
-            attron(A_REVERSE);
-        attron(COLOR_PAIR(4));
-        mvprintw(MARGIN_TOP + i, MARGIN_LEFT, "%s", (global->sounds[i]).name);
-        if (i == highlight)
-            attroff(A_REVERSE);
-        attroff(COLOR_PAIR(4));
-    }
-    mvprintw(MARGIN_TOP + global->sound_count, MARGIN_LEFT, "Retour");
-    if (highlight == global->sound_count)
-        attron(A_REVERSE);
-    mvprintw(MARGIN_TOP + global->sound_count, MARGIN_LEFT, "Retour");
-    if (highlight == global->sound_count)
-        attroff(A_REVERSE);
-    refresh();
-}
-
 static void call_functions2(int highlight)
 {
     switch (highlight) {
@@ -132,21 +110,19 @@ static void call_functions(Global_t *global, int highlight)
     }
 }
 
-static void key_gestion(int ch, Global_t *global, int *highlight)
+static void key_gestion(int ch, Global_t *global, int *hl)
 {
     switch (ch) {
         case KEY_UP:
-            *highlight = (*highlight > 0 ? *highlight - 1 : MAX_LINES - 1);
-            *highlight = ((*highlight == 1 || *highlight == 5) ? *highlight - 1
-                                                            : *highlight);
+            *hl = (*hl > 0 ? *hl - 1 : MAX_LINES - 1);
+            *hl = ((*hl == 1 || *hl == 5) ? *hl - 1 : *hl);
             break;
         case KEY_DOWN:
-            *highlight = (*highlight < MAX_LINES - 1 ? *highlight + 1 : 0);
-            *highlight = ((*highlight == 1 || *highlight == 5) ? *highlight + 1
-                                                            : *highlight);
+            *hl = (*hl < MAX_LINES - 1 ? *hl + 1 : 0);
+            *hl = ((*hl == 1 || *hl == 5) ? *hl + 1 : *hl);
             break;
         case 10:
-            call_functions(global, *highlight);
+            call_functions(global, *hl);
             break;
     }
 }
@@ -180,9 +156,11 @@ int main(int ac, char **av)
     Global_t global;
 
     global.sound_count = 0;
+    global.sound_displayed = 0;
     global.stop_playback = 0;
     global.lock = (pthread_mutex_t) PTHREAD_MUTEX_INITIALIZER;
     global.is_finished = FALSE;
+    global.search[0] = '\0';
     snprintf(global.sounds_file_path, sizeof(global.sounds_file_path), "%s/%s",
         getenv("HOME"), "SoundBoardTTY_sounds.txt");
     read_sounds(&global);
@@ -192,3 +170,26 @@ int main(int ac, char **av)
         flag_gestion(ac, av, &global);
     return NOERROR;
 }
+
+// void draw_submenu(const char *title, Global_t *global, int highlight)
+// {
+//     clear();
+//     mvprintw(0, MARGIN_LEFT, "%s", title);
+//     for (int i = 0; i < global->sound_count; i++) {
+//         if (i == highlight)
+//             attron(A_REVERSE);
+//         attron(COLOR_PAIR(4));
+//         mvprintw(MARGIN_TOP + i, MARGIN_LEFT, "- %s",
+//              (global->sounds[i]).name);
+//         if (i == highlight)
+//             attroff(A_REVERSE);
+//         attroff(COLOR_PAIR(4));
+//     }
+//     mvprintw(MARGIN_TOP + global->sound_count, MARGIN_LEFT, "Retour");
+//     if (highlight == global->sound_count)
+//         attron(A_REVERSE);
+//     mvprintw(MARGIN_TOP + global->sound_count, MARGIN_LEFT, "Retour");
+//     if (highlight == global->sound_count)
+//         attroff(A_REVERSE);
+//     refresh();
+// }
