@@ -15,22 +15,27 @@ static void print_help(void)
 
 static void flag_a(int ac, char **av, Global_t *global)
 {
+    char *absolute_path = get_absolute_path(av[3]);
+
     if (ac != 4)
         print_help();
-    command_add(av[2], av[3], global);
+    command_add(av[2], absolute_path, global);
+    free(absolute_path);
     printf("Sound '%s' added with path '%s'\n", av[2], av[3]);
 }
 
 static void flag_u(int ac, char **av, Global_t *global)
 {
     int id = -1;
+    char *absolute_path = get_absolute_path(av[4]);
 
     if (ac != 5)
         print_help();
     for (int i = 0; i < global->sound_count; i++)
         if (my_strcmp(global->sounds[i].name, av[2]) == 0)
             id = i;
-    command_upd(id, av[3], av[4], global);
+    command_upd(id, av[3], absolute_path, global);
+    free(absolute_path);
     printf("Sound '%s' updated with path '%s'\n", av[3], av[4]);
 }
 

@@ -4,6 +4,7 @@ static void enter_function(int highlight, Global_t *global)
 {
     char name[MAX_NAME] = "";
     char path[MAX_PATH] = "";
+    char *absolute_path;
 
     clear();
     mvprintw(MARGIN_TOP, MARGIN_LEFT,
@@ -16,7 +17,9 @@ static void enter_function(int highlight, Global_t *global)
         global->selected.path);
     move(MARGIN_TOP + 4, 0);
     input_ncurses(path, sizeof(path), 4);
-    command_upd(highlight, name, path, global);
+    absolute_path = get_absolute_path(path);
+    command_upd(highlight, name, absolute_path, global);
+    free(absolute_path);
     mvprintw(MARGIN_TOP + 6, MARGIN_LEFT,
         "Sound '%s' updated with path '%s'\n",
         (my_strlen(name) > 0 ? name : global->selected.name),
@@ -49,7 +52,7 @@ void handle_update_sound(Global_t *global)
         }
         if (ch == 's')
             s_key(global, &id);
+        draw_submenu("Select a sound to update", global, id);
+        ch = getch();
     }
-    draw_submenu("Select a sound to update", global, id);
-    ch = getch();
 }

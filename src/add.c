@@ -27,6 +27,7 @@ void handle_add_sound(Global_t *global)
 {
     char name[MAX_NAME] = "";
     char path[MAX_PATH] = "";
+    char *absolute_path;
 
     clear();
     mvprintw(MARGIN_TOP, MARGIN_LEFT, "Enter sound name: ");
@@ -35,7 +36,9 @@ void handle_add_sound(Global_t *global)
     mvprintw(MARGIN_TOP + 3, MARGIN_LEFT, "Enter sound path: ");
     move(MARGIN_TOP + 4, 0);
     input_ncurses(path, sizeof(path), 4);
-    command_add(name, path, global);
+    absolute_path = get_absolute_path(path);
+    command_add(name, absolute_path, global);
+    free(absolute_path);
     mvprintw(MARGIN_TOP + 6, MARGIN_LEFT, "Sound '%s' added with path '%s'\n",
         name, path);
     refresh();
