@@ -23,6 +23,35 @@ void input_ncurses(char *buffer, size_t size, int begin)
     }
 }
 
+static int is_good_parameter(const char *str, const char *type)
+{
+    if (!str || strlen(str) <= 0) {
+        mvprintw(MARGIN_TOP + 9, MARGIN_LEFT, "Can't add song with no %s\n",
+            type);
+        refresh();
+        getch();
+        return FALSE;
+    }
+    return TRUE;
+}
+
+static void handle_add_sound_type(Global_t *global, char *name,
+    char *absolute_path)
+{
+    char type[MAX_TYPE] = "";
+
+    mvprintw(MARGIN_TOP + 6, MARGIN_LEFT, "Enter sound catégorie: ");
+    move(MARGIN_TOP + 7, 0);
+    input_ncurses(type, sizeof(type), 7);
+    command_add(name, absolute_path, type, global);
+    mvprintw(MARGIN_TOP + 9, MARGIN_LEFT,
+        "Sound '%s' added with path '%s' at '%s' category\n", name,
+        absolute_path, type);
+    free(absolute_path);
+    refresh();
+    getch();
+}
+
 void handle_add_sound(Global_t *global)
 {
     char name[MAX_NAME] = "";
@@ -33,14 +62,13 @@ void handle_add_sound(Global_t *global)
     mvprintw(MARGIN_TOP, MARGIN_LEFT, "Enter sound name: ");
     move(MARGIN_TOP + 1, 0);
     input_ncurses(name, sizeof(name), 1);
+    if (!is_good_parameter(name, "name"))
+        return;
     mvprintw(MARGIN_TOP + 3, MARGIN_LEFT, "Enter sound path: ");
     move(MARGIN_TOP + 4, 0);
     input_ncurses(path, sizeof(path), 4);
     absolute_path = get_absolute_path(path);
-    command_add(name, absolute_path, global);
-    free(absolute_path);
-    mvprintw(MARGIN_TOP + 6, MARGIN_LEFT, "Sound '%s' added with path '%s'\n",
-        name, path);
-    refresh();
-    getch();
+    if (!is_good_parameter(absolute_path, "path"))
+        return;
+    handle_add_sound_type(global, name, absolute_path);
 }

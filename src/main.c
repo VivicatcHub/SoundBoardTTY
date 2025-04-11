@@ -155,7 +155,7 @@ int main(int ac, char **av)
 {
     Global_t global;
 
-    global.sound_count = 0;
+    global.nb_sound = 0;
     global.sound_displayed = 0;
     global.stop_playback = 0;
     global.lock = (pthread_mutex_t) PTHREAD_MUTEX_INITIALIZER;

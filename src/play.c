@@ -68,7 +68,7 @@ void handle_play_sound(Global_t *global)
     int highlight = 0;
     int ch = 0;
 
-    if (global->sound_count == 0) {
+    if (global->nb_sound == 0) {
         mvprintw(0, 5, "Aucun son dans la liste\n");
         refresh();
         getch();

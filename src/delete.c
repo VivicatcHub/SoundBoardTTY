@@ -6,8 +6,8 @@ static void enter_delete_sound(int highlight, Global_t *global)
 
     if (highlight == global->sound_displayed)
         return;
-    for (int i = 0; i < global->sound_count; i++)
-        if (my_strcmp(global->selected.name, global->sounds[i].name) == 0)
+    for (int i = 0; i < global->nb_sound; i++)
+        if (strcmp(global->selected.name, global->sounds[i].name) == 0)
             id = i;
     command_del(id, global);
     mvprintw(MARGIN_TOP + global->sound_displayed + 1, MARGIN_LEFT,

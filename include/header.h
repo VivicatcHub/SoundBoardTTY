@@ -40,8 +40,9 @@
     #define MARGIN_TOP 4
     #define MARGIN_LEFT 5
 
-    #define MAX_NAME 100
-    #define MAX_PATH 2560
+    #define MAX_NAME 32
+    #define MAX_PATH 128
+    #define MAX_TYPE 32
 
 ////////////////////////////////////////////////////////////
 /// STRUCTS
@@ -50,7 +51,14 @@
 typedef struct {
     char name[MAX_NAME];
     char path[MAX_PATH];
+    char type[MAX_TYPE];
 } Sound_t;
+
+typedef struct {
+    const char *name;
+    const char *path;
+    const char *type;
+} NewSound_t;
 
 ////////////////////////////////////////////////////////////
 /// GLOBAL
@@ -58,7 +66,7 @@ typedef struct {
 
 typedef struct Global {
     Sound_t sounds[MAX_SOUNDS];
-    int sound_count;
+    int nb_sound;
     pthread_t play_thread;
     char sounds_file_path[1024];
     int stop_playback;
@@ -127,8 +135,8 @@ void handle_volume(void);
 /// commands
 ////////////////////////////////////////////////////////////
 
-void command_add(char *name, char *path, Global_t *global);
-void command_upd(int id, char *new_name, char *new_path, Global_t *global);
+void command_add(char *name, char *path, char *type, Global_t *global);
+void command_upd(int id, NewSound_t *new_values, Global_t *global);
 void command_del(int id, Global_t *global);
 
 ////////////////////////////////////////////////////////////

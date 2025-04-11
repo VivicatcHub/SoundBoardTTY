@@ -25,7 +25,7 @@ static void display_searching(Global_t *global, int highlight,
 
 int search_programm(Global_t *global, int *highlight, const char *title)
 {
-    int index = my_strlen(global->search);
+    int index = strlen(global->search);
     int ch = 0;
 
     cbreak();

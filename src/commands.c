@@ -1,26 +1,29 @@
 #include "header.h"
 
-void command_add(char *name, char *path, Global_t *global)
+void command_add(char *name, char *path, char *type, Global_t *global)
 {
-    my_strcpy(global->sounds[global->sound_count].name, name);
-    my_strcpy(global->sounds[global->sound_count].path, path);
-    global->sound_count++;
+    strcpy(global->sounds[global->nb_sound].name, name);
+    strcpy(global->sounds[global->nb_sound].path, path);
+    strcpy(global->sounds[global->nb_sound].type, type);
+    global->nb_sound++;
     write_sounds(global);
 }
 
-void command_upd(int id, char *new_name, char *new_path, Global_t *global)
+void command_upd(int id, NewSound_t *new_values, Global_t *global)
 {
-    if (my_strlen(new_name) > 0)
-        my_strcpy(global->sounds[id].name, new_name);
-    if (my_strlen(new_path) > 0)
-        my_strcpy(global->sounds[id].path, new_path);
+    if (strlen(new_values->name) > 0)
+        strcpy(global->sounds[id].name, new_values->name);
+    if (strlen(new_values->path) > 0)
+        strcpy(global->sounds[id].path, new_values->path);
+    if (strlen(new_values->type) > 0)
+        strcpy(global->sounds[id].type, new_values->type);
     write_sounds(global);
 }
 
 void command_del(int id, Global_t *global)
 {
-    global->sound_count--;
-    for (int i = id; i < global->sound_count; i++)
+    global->nb_sound--;
+    for (int i = id; i < global->nb_sound; i++)
         global->sounds[i] = global->sounds[i + 1];
     write_sounds(global);
 }
