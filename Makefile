@@ -47,7 +47,7 @@ install:	dependencies all
 uninstall:
 	sudo rm -f $(BIN_DIR)/$(BIN_NAME)
 
-coding-style:
+coding-style:	fclean
 	./format.sh include/header.h
 	./format.sh include/help_fc.h
 	clear
